@@ -1,0 +1,16 @@
+{
+  "name": "canvas-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/js/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^5.0.0"
+  },
+  "dependencies": {}
+}
