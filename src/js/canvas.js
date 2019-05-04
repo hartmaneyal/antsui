@@ -30,12 +30,13 @@ function draw(canvasWidth, canvasHeight, xLines, yLines){
     drawGrid(ctx, canvasWidth, canvasHeight, xStep, yStep);
 };
 
-function initAnt(ant){
-    ant.style.visibility = 'visible';
-    ant.style.width = '98px';
-    ant.style.height = '98px';
-    ant.style.zIndex = '100';
-    ant.style.position = 'absolute';
+function initAnt(antId){
+    const ants = document.getElementById('ants');
+    const img = new Image();
+    img.id = 'ant' + antId;
+    img.classList.add('ant');
+    img.src = '../../images/ant.png';
+    ants.appendChild(img);
 };
 
 let ant;
@@ -47,13 +48,13 @@ window.addEventListener('DOMContentLoaded', _ => {
 
     const simulateAnts = document.getElementById('simulateAnts');
     simulateAnts.addEventListener('click', (evt) => {
-        ant = document.getElementById('ant');
-        initAnt(ant);
+        initAnt(1);
         ipc.send('move-ant');
     });
 });
 
 ipc.on('ant-moved', (evt, telemetry) => {
+    ant = document.getElementById('ant1');
     ant.style.left = telemetry.x;
     ant.style.top = telemetry.y;
     ant.style.transform = `rotate(${telemetry.angle}deg)`;

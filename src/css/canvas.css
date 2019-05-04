@@ -37,6 +37,17 @@ body {
       box-shadow: inset 1px 0 1px #33333D;
   }
 
-  .invert { 
+  .ant{
+    width: 98px;
+    height: 98px;
+    z-index: 100;
+    position: absolute;
     filter: invert(100%); 
+  }
+
+  .antsContainer{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 90;
   }

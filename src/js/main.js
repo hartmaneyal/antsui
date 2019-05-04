@@ -35,15 +35,15 @@ function sleep(milliseconds) {
   };
 
 ipc.on('move-ant', (evt) => {
-    mainWindow.webContents.send('ant-moved', {x: 109, y: 405, angle: 0});
+    mainWindow.webContents.send('ant-moved', {id: 1, x: 109, y: 405, angle: 0});
     sleep(500);
-    mainWindow.webContents.send('ant-moved', {x: 109, y: 305, angle: 0});
+    mainWindow.webContents.send('ant-moved', {id: 1, x: 109, y: 305, angle: 0});
     sleep(500);
-    mainWindow.webContents.send('ant-moved', {x: 109, y: 205, angle: 0});
+    mainWindow.webContents.send('ant-moved', {id: 1, x: 109, y: 205, angle: 0});
     sleep(500);
-    mainWindow.webContents.send('ant-moved', {x: 109, y: 105, angle: 0});
+    mainWindow.webContents.send('ant-moved', {id: 1, x: 109, y: 105, angle: 0});
     sleep(500);
-    mainWindow.webContents.send('ant-moved', {x: 209, y: 105, angle: 90});
+    mainWindow.webContents.send('ant-moved', {id: 1, x: 209, y: 105, angle: 90});
     sleep(500);
-    mainWindow.webContents.send('ant-moved', {x: 309, y: 105, angle: 90});
+    mainWindow.webContents.send('ant-moved', {id: 1, x: 309, y: 105, angle: 90});
 });
