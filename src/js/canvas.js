@@ -1,11 +1,14 @@
 const electron = require('electron');
 const { remote, ipcRenderer : ipc } = electron;
 
+let canvas;
 let antArray;
 const cWidth = 400;
 const cHeight = 400;
 const xL = 4;
 const yL = 4;
+const xStep = cWidth / xL;
+const yStep = cHeight / yL;
 
 function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){    
     ctx.beginPath(); 
@@ -24,7 +27,7 @@ function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){
 };
 
 function initGrid(canvasWidth, canvasHeight){
-    var canvas = document.getElementById('grid');
+    canvas = document.getElementById('grid');
     canvas.innerHTML = "";
     var ctx = canvas.getContext('2d');
 
@@ -32,31 +35,64 @@ function initGrid(canvasWidth, canvasHeight){
     canvas.height = canvasHeight;
 
     return ctx;
-}
+};
+
+function drawSpecialLine(ctx, fromX, toX, fromY, toY, brushColor, brushWidth){
+    ctx.beginPath();
+    ctx.strokeStyle = brushColor;
+    ctx.lineWidth = brushWidth;
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(toX, toY);
+    ctx.stroke(); 
+};
+
+function drawEntrance(ctx, fromX, toX, fromY, toY){
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'green', 3);
+};
+
+function drawWall(ctx, fromX, toX, fromY, toY){
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'purple', 3);
+};
+
+function drawOpen(ctx, fromX, toX, fromY, toY){
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'grey', 1);
+};
+
+function drawExit(ctx, fromX, toX, fromY, toY){
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'red', 2);
+};
+
+function gridFog(ctx){
+    ctx.fillStyle = 'grey';//'rgb(97, 100, 104)';
+    ctx.fillRect(0, 0, cWidth, cHeight);
+};
+
+function gridBlockOpen(ctx, fromx, fromY, width, height){
+    ctx.fillStyle = '#3B3B47';//'rgb(97, 100, 104)';
+    ctx.fillRect(fromx, fromY, width, height);
+};
 
 function drawEmptyGrid(canvasWidth, canvasHeight, xLines, yLines){
     var ctx = initGrid(canvasWidth, canvasHeight);
 
-    const xStep = canvasWidth / xLines;
-    const yStep = canvasHeight / yLines;
-
-    drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep);
+    //drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep);
+    gridFog(ctx);
 };
 
 function drawFullGrid(canvasWidth, canvasHeight, xLines, yLines){
     var ctx = initGrid(canvasWidth, canvasHeight);
 
-    const xStep = canvasWidth / xLines;
-    const yStep = canvasHeight / yLines;
-
     drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep);
-
-    ctx.beginPath();
-    ctx.strokeStyle = 'green';
-    ctx.lineWidth = 3;
-    ctx.moveTo(xStep, canvasHeight);
-    ctx.lineTo(xStep*2, canvasHeight);
-    ctx.stroke(); 
+    drawEntrance(ctx, xStep, xStep*2, canvasHeight, canvasHeight);
+    drawWall(ctx, 0, xStep, canvasHeight, canvasHeight);
+    drawWall(ctx, 0, 0, canvasHeight, canvasHeight-yStep);
+    drawWall(ctx, 0, xStep, canvasHeight-yStep, canvasHeight-yStep);
+    drawWall(ctx, xStep, xStep, canvasHeight-yStep, canvasHeight-yStep*4);
+    drawWall(ctx, xStep*2, xStep*3, canvasHeight, canvasHeight);
+    drawWall(ctx, xStep*3, xStep*3, canvasHeight, canvasHeight-yStep*3);
+    drawWall(ctx, xStep*3, xStep*4, canvasHeight-yStep*3, canvasHeight-yStep*3);
+    drawWall(ctx, xStep, xStep*4, canvasHeight-yStep*4, canvasHeight-yStep*4);
+    drawExit(ctx, xStep*4, xStep*4, canvasHeight-yStep*3, canvasHeight-yStep*4);
 };
 
 function initAnt(antId){
@@ -66,6 +102,34 @@ function initAnt(antId){
     img.classList.add('ant');
     img.src = '../../images/ant.png';
     ants.appendChild(img);
+};
+
+function updateGrid(ant){
+    var ctx = canvas.getContext('2d');
+    let leftLine = Math.floor(ant.x/xStep);
+    let bottomLine = Math.floor(ant.y/yStep);
+
+    gridBlockOpen(ctx, leftLine*xStep, yStep*(bottomLine-1), xStep, yStep);
+
+    if(ant.ll === 'wall') drawWall(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.ll === 'entr') drawEntrance(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1)); 
+    if(ant.ll === 'exit') drawExit(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.ll === 'open') drawOpen(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    
+    if(ant.ul === 'wall') drawWall(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    if(ant.ul === 'entr') drawEntrance(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    if(ant.ul === 'exit') drawExit(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    if(ant.ul === 'open') drawOpen(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    
+    if(ant.rl === 'wall') drawWall(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.rl === 'entr') drawEntrance(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.rl === 'exit') drawExit(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.rl === 'open') drawOpen(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+
+    if(ant.bl === 'wall') drawWall(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
+    if(ant.bl === 'entr') drawEntrance(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
+    if(ant.bl === 'exit') drawExit(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
+    if(ant.bl === 'open') drawOpen(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
 };
 
 window.addEventListener('DOMContentLoaded', _ => {
@@ -84,14 +148,15 @@ window.addEventListener('DOMContentLoaded', _ => {
     });
 });
 
-ipc.on('ant-moved', (evt, telemetry) => {
-    if(!antArray.includes(telemetry.id)){
-        initAnt(telemetry.id);
-        antArray.push(telemetry.id);
+ipc.on('ant-moved', (evt, ant) => {
+    if(!antArray.includes(ant.id)){
+        initAnt(ant.id);
+        antArray.push(ant.id);
         console.log("added ant");
     }
-    let ant = document.getElementById(`ant${telemetry.id}`);
-    ant.style.left = telemetry.x;
-    ant.style.top = telemetry.y;
-    ant.style.transform = `rotate(${telemetry.angle}deg)`;
+    let antEl = document.getElementById(`ant${ant.id}`);
+    antEl.style.left = ant.x;
+    antEl.style.top = ant.y;
+    antEl.style.transform = `rotate(${ant.angle}deg)`;
+    updateGrid(ant);
 });
