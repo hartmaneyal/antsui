@@ -1,10 +1,21 @@
 const electron = require('electron');
 const {app, BrowserWindow, globalShortcut, ipcMain: ipc} = electron;
 
-let mainWindow;
+const net = require('net');
+const protobuf = require("protobufjs");
 
+const server = require('./server');
+const emiter = require('./emiter');
+
+// ===============
+// Electron window
+// ===============
+let mainWindow;
 app.on('ready', _ => {
     globalShortcut.register('CommandOrControl+Q', _ => {app.quit();})
+
+    initProtoBuf();
+    server.startupServer();
 
     mainWindow = new BrowserWindow({
         width: 900,
@@ -20,34 +31,69 @@ app.on('ready', _ => {
     mainWindow.loadURL(`file://${app.getAppPath()}/src/html/canvas.html`);
     //mainWindow.webContents.openDevTools();
 
+    emiter.on('ant-move-data', (message) => {
+      console.log('Passing to UI');
+      mainWindow.webContents.send('ant-moved', message);
+    });
+
     mainWindow.on('closed', _ =>{
         mainWindow = null;
     });
 });
 
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-      if ((new Date().getTime() - start) > milliseconds){
-        break;
-      }
-    }
-  };
+// ===============
+// Simulative data
+// ===============
 
-ipc.on('move-ant', (evt) => {
-    mainWindow.webContents.send('ant-moved', {id: 1, x: 118, y: 433, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});
-    sleep(500);
-    mainWindow.webContents.send('ant-moved', {id: 1, x: 118, y: 333, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});
-    sleep(500);
-    mainWindow.webContents.send('ant-moved', {id: 1, x: 118, y: 233, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});
-    mainWindow.webContents.send('ant-moved', {id: 2, x: 118, y: 433, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});
-    sleep(500);
-    mainWindow.webContents.send('ant-moved', {id: 1, x: 118, y: 133, angle: 0, ll:'wall', ul:'wall', rl:'open', bl:'open'});
-    mainWindow.webContents.send('ant-moved', {id: 2, x: 218, y: 433, angle: 90, ll:'open', ul:'open', rl:'wall', bl:'wall'});
-    sleep(500);
-    mainWindow.webContents.send('ant-moved', {id: 1, x: 218, y: 133, angle: 90, ll:'open', ul:'wall', rl:'open', bl:'open'});
-    mainWindow.webContents.send('ant-moved', {id: 2, x: 218, y: 333, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});
-    sleep(500);
-    mainWindow.webContents.send('ant-moved', {id: 1, x: 318, y: 133, angle: 90, ll:'open', ul:'wall', rl:'exit', bl:'wall'});
-    mainWindow.webContents.send('ant-moved', {id: 2, x: 218, y: 233, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});
+// Telemetry-Protobuff init
+let TelemetryMessage;
+function initProtoBuf(){
+  protobuf.load(`${app.getAppPath()}/src/js/telemetryMessage.proto`, function(err, root) {
+    if (err)
+        throw err;
+
+    TelemetryMessage = root.lookupType("telemetrypackage.TelemetryMessage");
+  });
+};
+
+ipc.on('simulate-ants', (evt) => {
+    let payloads = [];
+    payloads.push({id: 1, x: 118, y: 433, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //1
+    payloads.push({id: 1, x: 118, y: 333, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //2
+    payloads.push({id: 1, x: 118, y: 233, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //3
+    payloads.push({id: 2, x: 118, y: 433, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //3
+    payloads.push({id: 1, x: 118, y: 133, angle: 0, ll:'wall', ul:'wall', rl:'open', bl:'open'});  //4
+    payloads.push({id: 2, x: 218, y: 433, angle: 90, ll:'open', ul:'open', rl:'wall', bl:'wall'}); //4
+    payloads.push({id: 1, x: 218, y: 133, angle: 90, ll:'open', ul:'wall', rl:'open', bl:'open'}); //5
+    payloads.push({id: 2, x: 218, y: 333, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //5
+    payloads.push({id: 1, x: 318, y: 133, angle: 90, ll:'open', ul:'wall', rl:'exit', bl:'wall'}); //6
+    payloads.push({id: 2, x: 218, y: 233, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //6
+
+    for(let i = 0; i <= payloads.length; ++i){
+        setTimeout(_ => {
+            const payload = payloads[i];
+            const errMsg = TelemetryMessage.verify(payload);
+            if (errMsg){
+                console.log('Error:' + errMsg);
+                return;
+            }
+            else{
+                const message = TelemetryMessage.create(payload);
+                var buffer = TelemetryMessage.encode(message).finish();
+
+                const client = net.connect(1337, 'localhost', function() {
+                    console.log('CLIENT:: Connected');
+                    client.write(buffer);
+                    client.end();
+                });
+                client.on('data', (data) => {
+                    console.log('CLIENT:: ' + data.toString());
+                    client.end();
+                });
+                client.on('end', () => {
+                    console.log('CLIENT:: disconnected from server');
+                });
+            }
+        }, i * 500);
+    }
 });

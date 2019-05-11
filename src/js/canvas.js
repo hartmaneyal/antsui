@@ -100,7 +100,7 @@ function initAnt(antId){
     const img = new Image();
     img.id = 'ant' + antId;
     img.classList.add('ant');
-    img.src = '../../images/ant.png';
+    img.src = '../../images/drone.png';
     ants.appendChild(img);
 };
 
@@ -144,11 +144,12 @@ window.addEventListener('DOMContentLoaded', _ => {
         const ants = document.getElementById('ants');
         ants.innerHTML = "";
         antArray = [];
-        ipc.send('move-ant');
+        ipc.send('simulate-ants');
     });
 });
 
 ipc.on('ant-moved', (evt, ant) => {
+    console.log("ant-moved");
     if(!antArray.includes(ant.id)){
         initAnt(ant.id);
         antArray.push(ant.id);
