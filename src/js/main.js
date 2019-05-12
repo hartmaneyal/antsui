@@ -58,16 +58,16 @@ function initProtoBuf(){
 
 ipc.on('simulate-ants', (evt) => {
     let payloads = [];
-    payloads.push({id: 1, x: 118, y: 433, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //1
-    payloads.push({id: 1, x: 118, y: 333, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //2
-    payloads.push({id: 1, x: 118, y: 233, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //3
-    payloads.push({id: 2, x: 118, y: 433, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //3
-    payloads.push({id: 1, x: 118, y: 133, angle: 0, ll:'wall', ul:'wall', rl:'open', bl:'open'});  //4
-    payloads.push({id: 2, x: 218, y: 433, angle: 90, ll:'open', ul:'open', rl:'wall', bl:'wall'}); //4
-    payloads.push({id: 1, x: 218, y: 133, angle: 90, ll:'open', ul:'wall', rl:'open', bl:'open'}); //5
-    payloads.push({id: 2, x: 218, y: 333, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //5
-    payloads.push({id: 1, x: 318, y: 133, angle: 90, ll:'open', ul:'wall', rl:'exit', bl:'wall'}); //6
-    payloads.push({id: 2, x: 218, y: 233, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //6
+    payloads.push({id: 1, x: 2, y: 1, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //1
+    payloads.push({id: 1, x: 2, y: 2, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //2
+    payloads.push({id: 1, x: 2, y: 3, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //3
+    payloads.push({id: 2, x: 2, y: 1, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //3
+    payloads.push({id: 1, x: 2, y: 4, angle: 0, ll:'wall', ul:'wall', rl:'open', bl:'open'});  //4
+    payloads.push({id: 2, x: 3, y: 1, angle: 90, ll:'open', ul:'open', rl:'wall', bl:'wall'}); //4
+    payloads.push({id: 1, x: 3, y: 4, angle: 90, ll:'open', ul:'wall', rl:'open', bl:'open'}); //5
+    payloads.push({id: 2, x: 3, y: 2, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //5
+    payloads.push({id: 1, x: 4, y: 4, angle: 90, ll:'open', ul:'wall', rl:'exit', bl:'wall'}); //6
+    payloads.push({id: 2, x: 3, y: 3, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //6
 
     for(let i = 0; i <= payloads.length; ++i){
         setTimeout(_ => {

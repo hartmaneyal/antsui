@@ -3,12 +3,16 @@ const { remote, ipcRenderer : ipc } = electron;
 
 let canvas;
 let antArray;
-const cWidth = 400;
-const cHeight = 400;
+const cWidth = 200;
+const cHeight = 200;
 const xL = 4;
 const yL = 4;
 const xStep = cWidth / xL;
 const yStep = cHeight / yL;
+const imgWidth = xStep/2;
+const imgHeight = yStep/2;
+let gridTop;
+let gridLeft;
 
 function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){    
     ctx.beginPath(); 
@@ -33,6 +37,11 @@ function initGrid(canvasWidth, canvasHeight){
 
     canvas.width  = canvasWidth;
     canvas.height = canvasHeight;
+
+    const rect = canvas.getBoundingClientRect();
+
+    gridTop = rect.top;
+    gridLeft = rect.left;
 
     return ctx;
 };
@@ -101,13 +110,15 @@ function initAnt(antId){
     img.id = 'ant' + antId;
     img.classList.add('ant');
     img.src = '../../images/drone.png';
+    img.width = imgWidth;
+    img.height = imgHeight;
     ants.appendChild(img);
 };
 
 function updateGrid(ant){
     var ctx = canvas.getContext('2d');
-    let leftLine = Math.floor(ant.x/xStep);
-    let bottomLine = Math.floor(ant.y/yStep);
+    let leftLine = ant.x-1;
+    let bottomLine = yL - ant.y + 1;
 
     gridBlockOpen(ctx, leftLine*xStep, yStep*(bottomLine-1), xStep, yStep);
 
@@ -156,8 +167,10 @@ ipc.on('ant-moved', (evt, ant) => {
         console.log("added ant");
     }
     let antEl = document.getElementById(`ant${ant.id}`);
-    antEl.style.left = ant.x;
-    antEl.style.top = ant.y;
+    // the shift of the grid + placing the img in the center of the grid block + block size*position
+    antEl.style.left = gridLeft + (xStep - imgWidth)/2 + xStep*(ant.x-1); 
+    // the shift of the grid from the screen top + placing the im in the center of the grid block + block size*position (y is reveresed)
+    antEl.style.top = gridTop + (yStep - imgHeight)/2 + yStep*(yL-ant.y);
     antEl.style.transform = `rotate(${ant.angle}deg)`;
     updateGrid(ant);
 });
