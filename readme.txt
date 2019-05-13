@@ -4,4 +4,5 @@ To test the UI:
 3. open the folder ants-ui
 4. run: npm install electron -D
    run: npm install protobufjs
+   run: npm install animejs
 5. run: npm start

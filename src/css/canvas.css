@@ -33,11 +33,18 @@ body {
 
   .button--slicein {
       background: none;
-    background-image: linear-gradient(to right, #363642, #3B3B47);
+      background-image: linear-gradient(to right, #363642, #3B3B47);
       box-shadow: inset 1px 0 1px #33333D;
   }
 
   .ant{
+    z-index: 100;
+    position: absolute;
+    filter: hue-rotate(180deg);
+    filter: brightness(0.25);
+  }
+
+  .antX{
     z-index: 100;
     position: absolute;
     filter: invert(100%); 
@@ -49,3 +56,38 @@ body {
     left: 0px;
     z-index: 90;
   }
+
+  #gridContainer {
+    height: 200;
+    color:#fff;
+    text-align:center;
+    background-image: url('../../images/bg.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    font-size: 12px;
+    font-family: 'Dancing Script', cursive;
+
+    -webkit-animation: backgroundScroll;
+    -webkit-animation-delay: 1;
+    -webkit-animation-duration: 20s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-fill-mode: forwards;
+    
+    animation: backgroundScroll;
+    animation-delay: 1;
+    animation-duration: 20s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes backgroundScroll {
+  from {background-position: 0 0;}
+  to {background-position: -180px 0px;}
+}
+@keyframes backgroundScroll {
+  from {background-position: 0 0;}
+  to {background-position: -180px 0px;}
+}

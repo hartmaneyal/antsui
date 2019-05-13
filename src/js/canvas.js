@@ -1,6 +1,8 @@
 const electron = require('electron');
 const { remote, ipcRenderer : ipc } = electron;
 
+const anime = require('animejs');
+
 let canvas;
 let antArray;
 const cWidth = 200;
@@ -14,6 +16,12 @@ const imgHeight = yStep/2;
 let gridTop;
 let gridLeft;
 
+const gridLineColor = '#5bcb6b';
+const specialLineColor = 'green';
+const wallLineColor = 'purple';
+const exitLineColor = 'red';
+const visitedBlock = '#42965a';
+
 function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){    
     ctx.beginPath(); 
     for (var x = 0; x <= canvasWidth; x += xStep) {
@@ -25,7 +33,7 @@ function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){
             ctx.moveTo(0, y);
             ctx.lineTo(canvasWidth, y);
     }
-    ctx.strokeStyle = 'grey';
+    ctx.strokeStyle = gridLineColor;
     ctx.lineWidth = 1;
     ctx.stroke(); 
 };
@@ -56,36 +64,36 @@ function drawSpecialLine(ctx, fromX, toX, fromY, toY, brushColor, brushWidth){
 };
 
 function drawEntrance(ctx, fromX, toX, fromY, toY){
-    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'green', 3);
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, specialLineColor, 3);
 };
 
 function drawWall(ctx, fromX, toX, fromY, toY){
-    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'purple', 3);
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, wallLineColor, 3);
 };
 
 function drawOpen(ctx, fromX, toX, fromY, toY){
-    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'grey', 1);
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, gridLineColor, 1);
 };
 
 function drawExit(ctx, fromX, toX, fromY, toY){
-    drawSpecialLine(ctx, fromX, toX, fromY, toY, 'red', 2);
+    drawSpecialLine(ctx, fromX, toX, fromY, toY, exitLineColor, 2);
 };
 
 function gridFog(ctx){
-    ctx.fillStyle = 'grey';//'rgb(97, 100, 104)';
+    ctx.fillStyle = 'grey';
     ctx.fillRect(0, 0, cWidth, cHeight);
 };
 
 function gridBlockOpen(ctx, fromx, fromY, width, height){
-    ctx.fillStyle = '#3B3B47';//'rgb(97, 100, 104)';
-    ctx.fillRect(fromx, fromY, width, height);
+    ctx.fillStyle = visitedBlock; //'#3B3B47';
+    ctx.fillRect(fromx + 2, fromY + 2, width - 4, height - 4);
 };
 
 function drawEmptyGrid(canvasWidth, canvasHeight, xLines, yLines){
     var ctx = initGrid(canvasWidth, canvasHeight);
 
-    //drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep);
-    gridFog(ctx);
+    drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep);
+    //gridFog(ctx);
 };
 
 function drawFullGrid(canvasWidth, canvasHeight, xLines, yLines){
@@ -168,9 +176,20 @@ ipc.on('ant-moved', (evt, ant) => {
     }
     let antEl = document.getElementById(`ant${ant.id}`);
     // the shift of the grid + placing the img in the center of the grid block + block size*position
-    antEl.style.left = gridLeft + (xStep - imgWidth)/2 + xStep*(ant.x-1); 
+    const antLeft = gridLeft + (xStep - imgWidth)/2 + xStep*(ant.x-1);
+    //antEl.style.left =  
     // the shift of the grid from the screen top + placing the im in the center of the grid block + block size*position (y is reveresed)
-    antEl.style.top = gridTop + (yStep - imgHeight)/2 + yStep*(yL-ant.y);
-    antEl.style.transform = `rotate(${ant.angle}deg)`;
+    const antTop = gridTop + (yStep - imgHeight)/2 + yStep*(yL-ant.y);
+    //antEl.style.top = 
+    //antEl.style.transform = `rotate(${ant.angle}deg)`;
+
+    anime({
+        targets: `#ant${ant.id}`,
+        translateX: antLeft,
+        translateY: antTop,
+        rotate: ant.angle,
+        duration: 500
+    });
+
     updateGrid(ant);
 });
