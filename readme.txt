@@ -5,4 +5,5 @@ To test the UI:
 4. run: npm install electron -D
    run: npm install protobufjs
    run: npm install animejs
+   run: npm install lokijs
 5. run: npm start

@@ -6,6 +6,7 @@ const protobuf = require("protobufjs");
 
 const server = require('./server');
 const emiter = require('./emiter');
+const constants = require('./constants');
 
 // ===============
 // Electron window
@@ -18,8 +19,8 @@ app.on('ready', _ => {
     server.startupServer();
 
     mainWindow = new BrowserWindow({
-        width: 900,
-        height: 700,
+        width: constants.MAIN_WINDOW_WIDTH,
+        height: constants.MAIN_WINDOW_HEIGHT,
         resizeable: false,
         "webPreferences":{
             //"webSecurity":false,
@@ -58,16 +59,16 @@ function initProtoBuf(){
 
 ipc.on('simulate-ants', (evt) => {
     let payloads = [];
-    payloads.push({id: 1, x: 2, y: 1, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //1
-    payloads.push({id: 1, x: 2, y: 2, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //2
-    payloads.push({id: 1, x: 2, y: 3, angle: 0, ll:'wall', ul:'open', rl:'open', bl:'open'});  //3
-    payloads.push({id: 2, x: 2, y: 1, angle: 0, ll:'open', ul:'open', rl:'open', bl:'entr'});  //3
-    payloads.push({id: 1, x: 2, y: 4, angle: 0, ll:'wall', ul:'wall', rl:'open', bl:'open'});  //4
-    payloads.push({id: 2, x: 3, y: 1, angle: 90, ll:'open', ul:'open', rl:'wall', bl:'wall'}); //4
-    payloads.push({id: 1, x: 3, y: 4, angle: 90, ll:'open', ul:'wall', rl:'open', bl:'open'}); //5
-    payloads.push({id: 2, x: 3, y: 2, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //5
-    payloads.push({id: 1, x: 4, y: 4, angle: 90, ll:'open', ul:'wall', rl:'exit', bl:'wall'}); //6
-    payloads.push({id: 2, x: 3, y: 3, angle: 0, ll:'open', ul:'open', rl:'wall', bl:'open'});  //6
+    payloads.push({id: 1, x: 2, y: 1, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY});  //1
+    payloads.push({id: 1, x: 2, y: 2, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN});  //2
+    payloads.push({id: 1, x: 2, y: 3, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN});  //3
+    payloads.push({id: 2, x: 2, y: 1, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY});  //3
+    payloads.push({id: 1, x: 2, y: 4, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN});  //4
+    payloads.push({id: 2, x: 3, y: 1, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_WALL}); //4
+    payloads.push({id: 1, x: 3, y: 4, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN}); //5
+    payloads.push({id: 2, x: 3, y: 2, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN});  //5
+    payloads.push({id: 1, x: 4, y: 4, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_EXIT, bl:constants.MAP_ENUM_WALL}); //6
+    payloads.push({id: 2, x: 3, y: 3, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN});  //6
 
     for(let i = 0; i <= payloads.length; ++i){
         setTimeout(_ => {
@@ -81,7 +82,7 @@ ipc.on('simulate-ants', (evt) => {
                 const message = TelemetryMessage.create(payload);
                 var buffer = TelemetryMessage.encode(message).finish();
 
-                const client = net.connect(1337, 'localhost', function() {
+                const client = net.connect(constants.SERVER_PORT, 'localhost', function() {
                     console.log('CLIENT:: Connected');
                     client.write(buffer);
                     client.end();
@@ -94,6 +95,6 @@ ipc.on('simulate-ants', (evt) => {
                     console.log('CLIENT:: disconnected from server');
                 });
             }
-        }, i * 500);
+        }, i * constants.SIMULATION_SPEED_MS);
     }
 });

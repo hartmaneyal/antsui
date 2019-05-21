@@ -1,14 +1,18 @@
 const electron = require('electron');
 const { remote, ipcRenderer : ipc } = electron;
 
+const constants = require('./constants');
 const anime = require('animejs');
+
+var db = require('./db');
+db.databaseInitialize();
 
 let canvas;
 let antArray;
-const cWidth = 200;
-const cHeight = 200;
-const xL = 4;
-const yL = 4;
+const cWidth = constants.MAP_WIDTH;
+const cHeight = constants.MAP_HEIGHT;
+const xL = constants.MAP_X_LINES;
+const yL = constants.MAP_Y_LINES;
 const xStep = cWidth / xL;
 const yStep = cHeight / yL;
 const imgWidth = xStep/2;
@@ -16,11 +20,11 @@ const imgHeight = yStep/2;
 let gridTop;
 let gridLeft;
 
-const gridLineColor = '#5bcb6b';
-const specialLineColor = 'green';
-const wallLineColor = 'purple';
-const exitLineColor = 'red';
-const visitedBlock = '#42965a';
+const gridLineColor = constants.MAP_GRID_LINE_COLOR;
+const specialLineColor = constants.MAP_SPECIAL_LINE_COLOR;
+const wallLineColor = constants.MAP_WALL_LINE_COLOR;
+const exitLineColor = constants.MAP_EXIT_LINE_COLOR;
+const visitedBlock = constants.MAP_VISITED_CELL_COLOR;
 
 function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){    
     ctx.beginPath(); 
@@ -85,7 +89,7 @@ function gridFog(ctx){
 };
 
 function gridBlockOpen(ctx, fromx, fromY, width, height){
-    ctx.fillStyle = visitedBlock; //'#3B3B47';
+    ctx.fillStyle = visitedBlock; 
     ctx.fillRect(fromx + 2, fromY + 2, width - 4, height - 4);
 };
 
@@ -93,7 +97,6 @@ function drawEmptyGrid(canvasWidth, canvasHeight, xLines, yLines){
     var ctx = initGrid(canvasWidth, canvasHeight);
 
     drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep);
-    //gridFog(ctx);
 };
 
 function drawFullGrid(canvasWidth, canvasHeight, xLines, yLines){
@@ -130,25 +133,25 @@ function updateGrid(ant){
 
     gridBlockOpen(ctx, leftLine*xStep, yStep*(bottomLine-1), xStep, yStep);
 
-    if(ant.ll === 'wall') drawWall(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
-    if(ant.ll === 'entr') drawEntrance(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1)); 
-    if(ant.ll === 'exit') drawExit(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
-    if(ant.ll === 'open') drawOpen(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.ll === constants.MAP_ENUM_WALL) drawWall(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.ll === constants.MAP_ENUM_ENTRY) drawEntrance(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1)); 
+    if(ant.ll === constants.MAP_ENUM_EXIT) drawExit(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.ll === constants.MAP_ENUM_OPEN) drawOpen(ctx, leftLine*xStep, leftLine*xStep, yStep*bottomLine, yStep*(bottomLine-1));
     
-    if(ant.ul === 'wall') drawWall(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
-    if(ant.ul === 'entr') drawEntrance(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
-    if(ant.ul === 'exit') drawExit(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
-    if(ant.ul === 'open') drawOpen(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    if(ant.ul === constants.MAP_ENUM_WALL) drawWall(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    if(ant.ul === constants.MAP_ENUM_ENTRY) drawEntrance(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    if(ant.ul === constants.MAP_ENUM_EXIT) drawExit(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
+    if(ant.ul === constants.MAP_ENUM_OPEN) drawOpen(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*(bottomLine-1), yStep*(bottomLine-1));
     
-    if(ant.rl === 'wall') drawWall(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
-    if(ant.rl === 'entr') drawEntrance(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
-    if(ant.rl === 'exit') drawExit(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
-    if(ant.rl === 'open') drawOpen(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.rl === constants.MAP_ENUM_WALL) drawWall(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.rl === constants.MAP_ENUM_ENTRY) drawEntrance(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.rl === constants.MAP_ENUM_EXIT) drawExit(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
+    if(ant.rl === constants.MAP_ENUM_OPEN) drawOpen(ctx, (1+leftLine)*xStep, (1+leftLine)*xStep, yStep*bottomLine, yStep*(bottomLine-1));
 
-    if(ant.bl === 'wall') drawWall(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
-    if(ant.bl === 'entr') drawEntrance(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
-    if(ant.bl === 'exit') drawExit(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
-    if(ant.bl === 'open') drawOpen(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
+    if(ant.bl === constants.MAP_ENUM_WALL) drawWall(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
+    if(ant.bl === constants.MAP_ENUM_ENTRY) drawEntrance(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
+    if(ant.bl === constants.MAP_ENUM_EXIT) drawExit(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
+    if(ant.bl === constants.MAP_ENUM_OPEN) drawOpen(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
 };
 
 window.addEventListener('DOMContentLoaded', _ => {
@@ -174,6 +177,8 @@ ipc.on('ant-moved', (evt, ant) => {
         antArray.push(ant.id);
         console.log("added ant");
     }
+    db.insertToolRecord(ant);
+
     let antEl = document.getElementById(`ant${ant.id}`);
     // the shift of the grid + placing the img in the center of the grid block + block size*position
     const antLeft = gridLeft + (xStep - imgWidth)/2 + xStep*(ant.x-1);
@@ -188,7 +193,7 @@ ipc.on('ant-moved', (evt, ant) => {
         translateX: antLeft,
         translateY: antTop,
         rotate: ant.angle,
-        duration: 500
+        duration: constants.MAP_ANIME_DURATION
     });
 
     updateGrid(ant);

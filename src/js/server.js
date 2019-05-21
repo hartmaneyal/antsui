@@ -5,9 +5,10 @@ const net = require('net');
 const protobuf = require("protobufjs");
 
 const emiter = require('./emiter');
+const constants = require('./constants');
 
-const socketTimeout = 6; // in seconds
-const maxAnts = 10;
+const socketTimeout = constants.SERVER_SOCKET_TIMEOUT; // in seconds
+const maxAnts = constants.SERVER_MAX_TOOLS;
 
 // Telemetry-Protobuff init
 let TelemetryMessage;
@@ -31,7 +32,7 @@ exports.startupServer = () => {
     console.log('SERVER:: REMOTE Socket ip :' + socket.remoteAddress);
     console.log('SERVER:: REMOTE Socket is IP4/IP6 : ' + socket.remoteFamily);
 
-    socket.setTimeout(socketTimeout*1000, function(){
+    socket.setTimeout(socketTimeout * constants.SERVER_SOCKET_TIMEOUT_MS, function(){
         console.log('SERVER:: Socket timed out');
         socket.end('SERVER:: Timed out!');
     });
@@ -74,7 +75,7 @@ exports.startupServer = () => {
         var isdestroyed = socket.destroyed;
         console.log('SERVER:: Socket destroyed:' + isdestroyed);
         socket.destroy();
-    },socketTimeout*1000);
+    },socketTimeout * constants.SERVER_SOCKET_TIMEOUT_MS);
     });
 
     server.on('error',function(error){
@@ -82,5 +83,5 @@ exports.startupServer = () => {
     });
 
     server.maxConnections = maxAnts;
-    server.listen(1337, 'localhost');
+    server.listen(constants.SERVER_PORT, 'localhost');
 };
