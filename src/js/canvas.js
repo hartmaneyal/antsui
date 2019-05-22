@@ -55,6 +55,8 @@ function initGrid(canvasWidth, canvasHeight){
     gridTop = rect.top;
     gridLeft = rect.left;
 
+    console.log('top:' + gridTop + ', left:' + gridLeft);
+
     return ctx;
 };
 
@@ -187,6 +189,8 @@ ipc.on('ant-moved', (evt, ant) => {
     const antTop = gridTop + (yStep - imgHeight)/2 + yStep*(yL-ant.y);
     //antEl.style.top = 
     //antEl.style.transform = `rotate(${ant.angle}deg)`;
+
+    console.log('ant top:' + antTop + '(' + ant.y + '), ant left:' + antLeft + '(' + ant.x + ')');
 
     anime({
         targets: `#ant${ant.id}`,

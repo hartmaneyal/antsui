@@ -1,0 +1,38 @@
+body {
+    font: normal 100%/1.5 Verdana, sans-serif;
+    color: #FAFAFA; 
+    background: #3B3B47;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
+  }
+  
+  a {
+    color:#7CBDBA;
+    text-decoration: none;
+  }
+  
+  .button {
+    display: inline-block;
+    line-height: 3em;
+    padding: 0 1em;
+    background: #34343E;
+    border-radius: 0.125em;
+    background-clip: padding-box;
+    margin-right: 1em;
+    border-color: #7CBDBA !important;
+  }
+
+  .button:hover{
+    border: 1px solid #EEE !important;
+  }
+   
+  .button--plain {
+      background: #41414E
+  }
+
+  .button--slicein {
+      background: none;
+      background-image: linear-gradient(to right, #363642, #3B3B47);
+      box-shadow: inset 1px 0 1px #33333D;
+  }

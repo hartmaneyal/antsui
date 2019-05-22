@@ -1,20 +1,123 @@
+<!DOCTYPE html>
 <html>
     <head>     
         <link rel="stylesheet" href="../css/canvas.css">
+        <link rel="stylesheet" type="text/css" href="../css/ds.css" /> 
     </head>
     <body>
-        <h1>
-            Ants UI
-        </h1>
-        <div>
-            <a class="button" href="#" id="drawGrid">Draw Grid</a>
-            <a class="button" href="#" id="simulateAnts">Simulate Ants</a>
-        </div>
-        <div id="gridContainer">
-            <canvas id="grid"></canvas>
-            <div id="ants" class="antsContainer"></div>
+        <div id="ants" class="antsContainer"></div>
+        <div id="uiWrapper">
+            <div class="row">
+                <div class="col-md-8">
+                        <h1>Ants UI <small>controller client</small> <img src="../../images/logo.png" class="antX"></h1>
+                </div>	
+                <div class="col-md-4">
+                        <div>
+                            <button type="button" class="btn btn-default" id="drawGrid">Draw Grid</button>
+                            <button type="button" class="btn btn-default" id="simulateAnts">Simulate Ants</button>
+                        </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Mapping view</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="gridContainer">
+                                <canvas id="grid"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Stats</h3>
+                        </div>
+                        <div class="panel-body"></div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Time Elapssed</div>
+                                <div class="panel-body">
+                                    33 sec
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Total tools</div>
+                                <div class="panel-body">
+                                    3
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Area Mapped</div>
+                                <div class="panel-body">
+                                    35 m2
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Tool tracking </h3>
+                            </div>
+                            <div class="panel-body">
+                                
+                                    <table class="table table-bordered table-hover table-dark">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tool ID</th>
+                                            <th scope="col">X Position</th>
+                                            <th scope="col">Y Position</th>
+                                            <th scope="col">Battery Level</th>
+                                            <th scope="col">Detailed View</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>1</td>
+                                            <td>2</td>
+                                            <td>90%</td>
+                                            <td><button type="button" class="btn btn-default">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                                <th scope="row">2</th>
+                                                <td>2</td>
+                                                <td>3</td>
+                                                <td>50%</td>
+                                                <td><button type="button" class="btn btn-default">Open</button></td>
+                                        </tr>
+                                        <tr>
+                                                <th scope="row">3</th>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>70%</td>
+                                                <td><button type="button" class="btn btn-default">Open</button></td>
+                                        </tr>
+                                    </tbody>
+                                    </table>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
         </div>
 
-        <script>require('../js/canvas')</script>
+        <script>
+            window.$ = window.jQuery = require('jquery');
+            window.Bootstrap = require('bootstrap');
+            require('../js/canvas')
+        </script>
     </body>
 </html>

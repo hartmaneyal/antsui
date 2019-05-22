@@ -1,64 +1,39 @@
-body {
-    font: normal 100%/1.5 Verdana, sans-serif;
-    color: #FAFAFA; 
-    background: #3B3B47;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-smoothing: antialiased;
-  }
-  
-  a {
-    color:#7CBDBA;
-    text-decoration: none;
-  }
-  
-  .button {
-    display: inline-block;
-    line-height: 3em;
-    padding: 0 1em;
-    background: #34343E;
-    border-radius: 0.125em;
-    background-clip: padding-box;
-    margin-right: 1em;
-    border-color: #7CBDBA !important;
-  }
 
-  .button:hover{
-    border: 1px solid #EEE !important;
-  }
-   
-  .button--plain {
-      background: #41414E
-  }
+#uiWrapper{
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+}
 
-  .button--slicein {
-      background: none;
-      background-image: linear-gradient(to right, #363642, #3B3B47);
-      box-shadow: inset 1px 0 1px #33333D;
-  }
-
-  .ant{
+.ant{
     z-index: 100;
     position: absolute;
     filter: hue-rotate(180deg);
     filter: brightness(0.25);
-  }
+}
 
-  .antX{
+.antX{
     z-index: 100;
     position: absolute;
     filter: invert(100%); 
-  }
+    height: 50px;
+    margin-left: 10px;
+    margin-top: -5px;
+}
 
-  .antsContainer{
+.antsContainer{
     position: absolute;
     top: 0px;
     left: 0px;
     z-index: 90;
-  }
+}
 
-  #gridContainer {
-    height: 200;
+#grid{
+  margin-top: 5px;
+}
+
+#gridContainer {
+    min-height: 380px;
     color:#fff;
     text-align:center;
     background-image: url('../../images/bg.jpg');

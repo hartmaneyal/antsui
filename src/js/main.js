@@ -30,6 +30,7 @@ app.on('ready', _ => {
     });
 
     mainWindow.loadURL(`file://${app.getAppPath()}/src/html/canvas.html`);
+    mainWindow.setResizable(false);
     //mainWindow.webContents.openDevTools();
 
     emiter.on('ant-move-data', (message) => {
