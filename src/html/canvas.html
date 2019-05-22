@@ -42,14 +42,14 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">Time Elapssed</div>
                                 <div class="panel-body">
-                                    33 sec
+                                    <span id='timeElapssed'></span>
                                 </div>
                             </div>
                             <hr />
                             <div class="panel panel-default">
                                 <div class="panel-heading">Total tools</div>
                                 <div class="panel-body">
-                                    3
+                                    <span id='totalTools'></span>
                                 </div>
                             </div>
                             <hr />
@@ -70,43 +70,18 @@
                                 <h3 class="panel-title">Tool tracking </h3>
                             </div>
                             <div class="panel-body">
-                                
-                                    <table class="table table-bordered table-hover table-dark">
+                                <table class="table table-bordered table-hover table-dark" id='toolTable'>
                                     <thead>
                                         <tr>
-                                            <th scope="col">Tool ID</th>
-                                            <th scope="col">X Position</th>
-                                            <th scope="col">Y Position</th>
-                                            <th scope="col">Battery Level</th>
-                                            <th scope="col">Detailed View</th>
+                                            <th data-field='id' scope="col">Tool ID</th>
+                                            <th data-field='x' scope="col">X Position</th>
+                                            <th data-field='y' scope="col">Y Position</th>
+                                            <th data-field='battery' scope="col">Battery Level</th>
+                                            <th data-field='action' scope="col">Detailed View</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>1</td>
-                                            <td>2</td>
-                                            <td>90%</td>
-                                            <td><button type="button" class="btn btn-default">Open</button></td>
-                                        </tr>
-                                        <tr>
-                                                <th scope="row">2</th>
-                                                <td>2</td>
-                                                <td>3</td>
-                                                <td>50%</td>
-                                                <td><button type="button" class="btn btn-default">Open</button></td>
-                                        </tr>
-                                        <tr>
-                                                <th scope="row">3</th>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>70%</td>
-                                                <td><button type="button" class="btn btn-default">Open</button></td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-
-
+                                    <tbody id="toolTableRecords"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

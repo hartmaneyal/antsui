@@ -8,5 +8,6 @@ To test the UI:
    run: npm install lokijs
    run: npm install jquery
    run: npm install popper.js --save
-   run: npm install bootstrap -d
+   run: npm install bootstrap
+   run: npm install timer-stopwatch
 5. run: npm start

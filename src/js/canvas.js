@@ -26,6 +26,8 @@ const wallLineColor = constants.MAP_WALL_LINE_COLOR;
 const exitLineColor = constants.MAP_EXIT_LINE_COLOR;
 const visitedBlock = constants.MAP_VISITED_CELL_COLOR;
 
+let toolTable;
+
 function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){    
     ctx.beginPath(); 
     for (var x = 0; x <= canvasWidth; x += xStep) {
@@ -54,6 +56,8 @@ function initGrid(canvasWidth, canvasHeight){
 
     gridTop = rect.top;
     gridLeft = rect.left;
+
+    resetToolTable();
 
     console.log('top:' + gridTop + ', left:' + gridLeft);
 
@@ -168,16 +172,19 @@ window.addEventListener('DOMContentLoaded', _ => {
         const ants = document.getElementById('ants');
         ants.innerHTML = "";
         antArray = [];
+        startTimer();
         ipc.send('simulate-ants');
     });
 });
 
 ipc.on('ant-moved', (evt, ant) => {
     console.log("ant-moved");
+    let newAnt = false;
     if(!antArray.includes(ant.id)){
         initAnt(ant.id);
         antArray.push(ant.id);
         console.log("added ant");
+        newAnt = true;
     }
     db.insertToolRecord(ant);
 
@@ -201,4 +208,65 @@ ipc.on('ant-moved', (evt, ant) => {
     });
 
     updateGrid(ant);
+    updateToolTable(ant, newAnt);
+});
+
+function resetToolTable(){
+    toolTable = document.getElementById('toolTableRecords');
+    toolTable.innerHTML = "";
+
+    document.getElementById('totalTools').innerHTML = '0';
+    document.getElementById('timeElapssed').innerHTML = '0';
+}
+
+function updateToolTable(ant, newAnt){
+    if(newAnt){
+        const tr = document.createElement("tr");
+
+        const id = document.createElement("td");
+        id.innerHTML = ant.id;
+        tr.appendChild(id);
+
+        const x = document.createElement("td");
+        x.innerHTML = "<span id='x" + ant.id + "'>" + ant.x + "</span>";
+        tr.appendChild(x);
+
+        const y = document.createElement("td");
+        y.innerHTML = "<span id='y" + ant.id + "'>" + ant.y + "</span>";
+        tr.appendChild(y);
+
+        const battery = document.createElement("td");
+        battery.innerHTML = "<span id='battery" + ant.id + "'>" + ant.battery + "</span>";
+        tr.appendChild(battery);
+
+        const action = document.createElement("td");
+        action.innerHTML = "<button type='button' class='btn btn-default' value='" + ant.id + "'>Details</button>";
+        tr.appendChild(action);
+
+        toolTable.appendChild(tr);
+
+        document.getElementById('totalTools').innerHTML = antArray.length;
+    } 
+    else{
+        document.getElementById('x' + ant.id).innerHTML = ant.x;
+        document.getElementById('y' + ant.id).innerHTML = ant.y;
+        document.getElementById('battery' + ant.id).innerHTML = (ant.battery > 50 ? ant.battery : "<font color='red'>" + ant.battery + "</font>");
+    }
+};
+
+var Stopwatch = require('timer-stopwatch');
+var timer = new Stopwatch();
+
+function startTimer(){
+    timer.reset(0);
+    timer.start();
+    timer.onTime(function(time) {
+        console.log(time.ms);
+        document.getElementById('timeElapssed').innerHTML = time.ms / 1000;
+    });
+};
+
+ipc.on('session-stop', (evt) => {
+    console.log("session-stop");
+    timer.stop();
 });
