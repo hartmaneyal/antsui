@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <link rel="stylesheet" href="../css/canvas.css">
+        <link rel="stylesheet" type="text/css" href="../css/ds.css" /> 
+    </head>
+    <body> 
+        <div id="uiWrapper">
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <h4>Tool details (ID:<span id='spn'></span>)</h4>
+                </div>	
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Battery Level</div>
+                        <div class="panel-body">
+                            <canvas id="batteryGauge" style="margin-left: auto;margin-right: auto;display: block;">
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Telemetry summary</div>
+                        <div class="panel-body">
+                                <table class="table table-bordered table-dark" id='telemetryData'>
+                                    <thead>
+                                        <tr>
+                                            <th data-field="param" scope="col">Parameter</th>
+                                            <th data-field="param_value" scope="col">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="telemetryRecords">
+                                        <tr>
+                                            <td>Param1</td><td>1.000</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Param2</td><td>2.000</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Param3</td><td>3.000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Video feed</div>
+                        <div class="panel-body">
+                            <img src='../../images/MockImg.jpg' height="385" style="margin-left: auto;margin-right: auto;display: block;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Session data collection</div>
+                        <div class="panel-body">
+                            <table class="table table-bordered table-hover table-dark" id='toolTable'>
+                                <thead>
+                                    <tr>
+                                        <th data-field='id' scope="col">Tool ID</th>
+                                        <th data-field='x' scope="col">X Position</th>
+                                        <th data-field='y' scope="col">Y Position</th>
+                                        <th data-field='battery' scope="col">Battery Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="toolTableRecords"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+    <script>
+        window.$ = window.jQuery = require('jquery');
+        window.Bootstrap = require('bootstrap');
+        require('../js/toolData')
+    </script>
+</html>

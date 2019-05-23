@@ -4,8 +4,9 @@ const { remote, ipcRenderer : ipc } = electron;
 const constants = require('./constants');
 const anime = require('animejs');
 
+const emiter = require('./emiter');
 var db = require('./db');
-db.databaseInitialize();
+var session;
 
 let canvas;
 let antArray;
@@ -27,6 +28,13 @@ const exitLineColor = constants.MAP_EXIT_LINE_COLOR;
 const visitedBlock = constants.MAP_VISITED_CELL_COLOR;
 
 let toolTable;
+
+var Stopwatch = require('timer-stopwatch');
+var timer = new Stopwatch();
+
+// ==========================
+// Drawing the grid functions
+// ==========================
 
 function drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep){    
     ctx.beginPath(); 
@@ -160,7 +168,17 @@ function updateGrid(ant){
     if(ant.bl === constants.MAP_ENUM_OPEN) drawOpen(ctx, leftLine*xStep, xStep*(leftLine+1), yStep*bottomLine, yStep*bottomLine);
 };
 
+// ==========================
+// events
+// ==========================
+
 window.addEventListener('DOMContentLoaded', _ => {
+    db.databaseInitialize();
+    emiter.on('db-init', (ses) => {
+        session = ses;
+        console.log('session: ' + session);
+      });
+    
     const drawGrid = document.getElementById('drawGrid');
     drawGrid.addEventListener('click', (evt) => {
         drawFullGrid(cWidth, cHeight, xL, yL);
@@ -186,7 +204,7 @@ ipc.on('ant-moved', (evt, ant) => {
         console.log("added ant");
         newAnt = true;
     }
-    db.insertToolRecord(ant);
+    db.insertToolRecord(session, ant);
 
     let antEl = document.getElementById(`ant${ant.id}`);
     // the shift of the grid + placing the img in the center of the grid block + block size*position
@@ -211,12 +229,45 @@ ipc.on('ant-moved', (evt, ant) => {
     updateToolTable(ant, newAnt);
 });
 
+// ==========================
+// Tool table control
+// ==========================
+
 function resetToolTable(){
     toolTable = document.getElementById('toolTableRecords');
     toolTable.innerHTML = "";
 
     document.getElementById('totalTools').innerHTML = '0';
     document.getElementById('timeElapssed').innerHTML = '0';
+
+
+
+    const tr = document.createElement("tr");
+    const id = document.createElement("td");
+    id.innerHTML = 1;
+    tr.appendChild(id);
+
+    const x = document.createElement("td");
+    x.innerHTML = "<span id='x" + 1 + "'>" + 1 + "</span>";
+    tr.appendChild(x);
+
+    const y = document.createElement("td");
+    y.innerHTML = "<span id='y" + 1 + "'>" + 1 + "</span>";
+    tr.appendChild(y);
+
+    const battery = document.createElement("td");
+    battery.innerHTML = "<span id='battery" + 1 + "'>" + 1 + "</span>";
+    tr.appendChild(battery);
+
+    const action = document.createElement("td");
+    action.innerHTML = "<button type='button' class='btn btn-default' id='action" + 1 + "'>Details</button>";
+    tr.appendChild(action);
+
+    toolTable.appendChild(tr);
+
+    document.querySelector('#action1').addEventListener('click', (evt) => {
+        ipc.send('tool-details', session, 1);
+    });
 }
 
 function updateToolTable(ant, newAnt){
@@ -240,12 +291,17 @@ function updateToolTable(ant, newAnt){
         tr.appendChild(battery);
 
         const action = document.createElement("td");
-        action.innerHTML = "<button type='button' class='btn btn-default' value='" + ant.id + "'>Details</button>";
+        action.innerHTML = "<button type='button' class='btn btn-default' id='action" + ant.id + "'>Details</button>";
         tr.appendChild(action);
 
         toolTable.appendChild(tr);
 
         document.getElementById('totalTools').innerHTML = antArray.length;
+
+        document.querySelector('#action' + ant.id).addEventListener('click', (evt) => {
+            console.log(ant.id);
+            ipc.send('tool-details', session, ant.id);
+        });
     } 
     else{
         document.getElementById('x' + ant.id).innerHTML = ant.x;
@@ -254,8 +310,9 @@ function updateToolTable(ant, newAnt){
     }
 };
 
-var Stopwatch = require('timer-stopwatch');
-var timer = new Stopwatch();
+// ==========================
+// timer functions
+// ==========================
 
 function startTimer(){
     timer.reset(0);

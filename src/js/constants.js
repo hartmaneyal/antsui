@@ -2,6 +2,8 @@ module.exports = {
     // Screen size
     MAIN_WINDOW_WIDTH : 1400,
     MAIN_WINDOW_HEIGHT : 1000,
+    TOOL_WINDOW_WIDTH : 1000,
+    TOOL_WINDOW_HEIGHT : 800,
     // Simulative data refresh rate
     SIMULATION_SPEED_MS : 500,
     // database setting

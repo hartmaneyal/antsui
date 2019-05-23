@@ -10,4 +10,5 @@ To test the UI:
    run: npm install popper.js --save
    run: npm install bootstrap
    run: npm install timer-stopwatch
+   run: npm install canvas-gauges
 5. run: npm start

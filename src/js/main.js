@@ -8,9 +8,9 @@ const server = require('./server');
 const emiter = require('./emiter');
 const constants = require('./constants');
 
-// ===============
-// Electron window
-// ===============
+// ====================
+// Electron main window
+// ====================
 let mainWindow;
 app.on('ready', _ => {
     globalShortcut.register('CommandOrControl+Q', _ => {app.quit();})
@@ -40,6 +40,32 @@ app.on('ready', _ => {
 
     mainWindow.on('closed', _ =>{
         mainWindow = null;
+    });
+});
+
+// ==============
+// details window
+// ==============
+
+ipc.on('tool-details', (evt, session, antId) => {
+    console.log(antId);
+
+    let toolWindow;
+    toolWindow = new BrowserWindow({
+        width: constants.TOOL_WINDOW_WIDTH,
+        height: constants.TOOL_WINDOW_HEIGHT,
+        resizeable: false,
+        "webPreferences":{
+            //"webSecurity":false,
+            nodeIntegration: true,
+            nodeIntegrationInWorker: true
+          }
+    });
+
+    toolWindow.loadURL(`file://${app.getAppPath()}/src/html/tool.html?session=${session}&id=${antId}`);
+    toolWindow.setResizable(false);
+    toolWindow.on('closed', _ =>{
+        toolWindow = null;
     });
 });
 
@@ -87,16 +113,18 @@ ipc.on('simulate-ants', (evt) => {
                     console.log('CLIENT:: Connected');
                     client.write(buffer);
                     client.end();
+                    if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
                 });
                 client.on('data', (data) => {
                     console.log('CLIENT:: ' + data.toString());
                     client.end();
+                    if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
                 });
                 client.on('end', () => {
                     console.log('CLIENT:: disconnected from server');
                 });
 
-                if(i == payloads.length) mainWindow.webContents.send('session-stop');
+                if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
             }
         }, i * constants.SIMULATION_SPEED_MS);
     }
