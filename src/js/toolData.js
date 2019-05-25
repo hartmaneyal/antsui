@@ -4,6 +4,9 @@ const { remote, ipcRenderer : ipc } = electron;
 const LinearGauge = require('canvas-gauges').LinearGauge;
 let gauge;
 
+const emiter = require('./emiter');
+var db = require('./db');
+
 window.addEventListener('DOMContentLoaded', _ => {
     let srch = global.location.search;
     let parts = srch.split('&');
@@ -14,7 +17,7 @@ window.addEventListener('DOMContentLoaded', _ => {
     setupGauge();
     gauge.value = 50;
 
-    loadToolData(session, id);
+    db.getToolData(session, id);
 });
 
 function setupGauge(){
@@ -53,6 +56,31 @@ function setupGauge(){
     }).draw();
 };
 
-function loadToolData(session, id){
+emiter.on('tool-data-ready', (data) => {
+    console.log('Data recieved');
+    
+    let toolTable = document.getElementById('toolTableRecords');
+    for(let i = 0; i < data.length; i++){
+        const tr = document.createElement("tr");
 
-}
+        const id = document.createElement("td");
+        id.innerHTML = data[i].id;
+        tr.appendChild(id);
+
+        const x = document.createElement("td");
+        x.innerHTML = "<span id='x" + data[i].id + "'>" + data[i].x + "</span>";
+        tr.appendChild(x);
+
+        const y = document.createElement("td");
+        y.innerHTML = "<span id='y" + data[i].id + "'>" + data[i].y + "</span>";
+        tr.appendChild(y);
+
+        const battery = document.createElement("td");
+        battery.innerHTML = "<span id='battery" + data[i].id + "'>" + data[i].battery + "</span>";
+        tr.appendChild(battery);
+
+        toolTable.appendChild(tr);
+
+        //document.getElementById('totalTools').innerHTML = antArray.length;
+    }
+});

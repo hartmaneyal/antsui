@@ -97,7 +97,7 @@ ipc.on('simulate-ants', (evt) => {
     payloads.push({id: 1, x: 4, y: 4, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_EXIT, bl:constants.MAP_ENUM_WALL, battery:50}); //6
     payloads.push({id: 2, x: 3, y: 3, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN, battery:70});  //6
 
-    for(let i = 0; i <= payloads.length; ++i){
+    for(let i = 0; i < payloads.length; i++){
         setTimeout(_ => {
             const payload = payloads[i];
             const errMsg = TelemetryMessage.verify(payload);

@@ -241,7 +241,7 @@ function resetToolTable(){
     document.getElementById('timeElapssed').innerHTML = '0';
 
 
-
+    
     const tr = document.createElement("tr");
     const id = document.createElement("td");
     id.innerHTML = 1;
@@ -268,6 +268,7 @@ function resetToolTable(){
     document.querySelector('#action1').addEventListener('click', (evt) => {
         ipc.send('tool-details', session, 1);
     });
+    
 }
 
 function updateToolTable(ant, newAnt){

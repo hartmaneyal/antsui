@@ -57,6 +57,21 @@ exports.insertToolRecord = (session, data) => {
         ul:data.ul, 
         rl:data.rl, 
         bl:data.bl,
+        battery: data.battery,
         tm: (new Date()).getTime()
     });
 };
+
+exports.getToolData = (session, id) => {
+    ldb = new loki(constants.DATABASE_LOCATION, { 
+        adapter : adapter,
+        autoload: true,
+        autosave: true, 
+        autosaveInterval: constants.DATABASE_AUTOSAVE_MS,
+        autoloadCallback: function(){
+            tool_data = ldb.getCollection("tool_data");
+            let result = tool_data.find({'session':1, 'id': 1});
+            emiter.emit('tool-data-ready', result); 
+        }
+    });
+}
