@@ -45,9 +45,12 @@ exports.databaseInitialize = (done) => {
     });
 };
 
+let toolKey = 0;
 exports.insertToolRecord = (session, data) => {
+    toolKey++;
     tool_data = ldb.getCollection("tool_data");
     tool_data.insert({
+        key: toolKey,
         session: session,
         id: data.id, 
         x: data.x, 
@@ -62,16 +65,22 @@ exports.insertToolRecord = (session, data) => {
     });
 };
 
-exports.getToolData = (session, id) => {
+exports.basicInit = () => {
     ldb = new loki(constants.DATABASE_LOCATION, { 
         adapter : adapter,
         autoload: true,
         autosave: true, 
         autosaveInterval: constants.DATABASE_AUTOSAVE_MS,
         autoloadCallback: function(){
-            tool_data = ldb.getCollection("tool_data");
-            let result = tool_data.find({'session':1, 'id': 1});
-            emiter.emit('tool-data-ready', result); 
+            emiter.emit('basicInit-ready'); 
         }
+    });
+}
+
+exports.getToolData = (inSession, inId, lastKey) => {
+    ldb.loadDatabase({}, _ => {
+        tool_data = ldb.getCollection("tool_data");
+        let result = tool_data.chain().find({'session': parseInt(inSession, 10), 'id': parseInt(inId, 10), 'key' : {'$gt': parseInt(lastKey, 10)}}).simplesort('tm').data();
+        emiter.emit('toolData-ready', result); 
     });
 }

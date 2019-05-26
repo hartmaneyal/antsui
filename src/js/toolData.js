@@ -7,17 +7,19 @@ let gauge;
 const emiter = require('./emiter');
 var db = require('./db');
 
+var session;
+var id;
 window.addEventListener('DOMContentLoaded', _ => {
     let srch = global.location.search;
     let parts = srch.split('&');
-    let session = parts[0].split('=')[1];
-    let id = parts[1].split('=')[1];
+
+    session = parts[0].split('=')[1];
+    id = parts[1].split('=')[1];
 
     document.getElementById('spn').innerHTML = id;
     setupGauge();
-    gauge.value = 50;
 
-    db.getToolData(session, id);
+    db.basicInit();
 });
 
 function setupGauge(){
@@ -56,9 +58,17 @@ function setupGauge(){
     }).draw();
 };
 
-emiter.on('tool-data-ready', (data) => {
-    console.log('Data recieved');
-    
+emiter.on('basicInit-ready', _ => {
+    console.log('DB Ready');
+    setInterval(_ => {
+        db.getToolData(session, id, lastKey);
+    }, 1000);
+});
+
+var lastKey = -1;
+let batteryLevel = -1;
+emiter.on('toolData-ready', (data) => {
+    console.log('Data refreshed');
     let toolTable = document.getElementById('toolTableRecords');
     for(let i = 0; i < data.length; i++){
         const tr = document.createElement("tr");
@@ -81,6 +91,10 @@ emiter.on('tool-data-ready', (data) => {
 
         toolTable.appendChild(tr);
 
-        //document.getElementById('totalTools').innerHTML = antArray.length;
+        if(data[i].key > lastKey) {
+            lastKey = data[i].key;
+            batteryLevel = data[i].battery;
+        }
     }
+    gauge.value = batteryLevel;
 });

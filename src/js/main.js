@@ -48,7 +48,7 @@ app.on('ready', _ => {
 // ==============
 
 ipc.on('tool-details', (evt, session, antId) => {
-    console.log(antId);
+    console.log(antId + ',' + session);
 
     let toolWindow;
     toolWindow = new BrowserWindow({
