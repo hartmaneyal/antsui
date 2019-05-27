@@ -6,6 +6,9 @@ var db = require('./db');
 
 var session;
 var id;
+var toolTable;
+var gaugeLabel;
+var gauge;
 window.addEventListener('DOMContentLoaded', _ => {
     let srch = global.location.search;
     let parts = srch.split('&');
@@ -14,6 +17,10 @@ window.addEventListener('DOMContentLoaded', _ => {
     id = parts[1].split('=')[1];
 
     document.getElementById('spn').innerHTML = id;
+
+    toolTable = document.getElementById('toolTableRecords');
+    gaugeLabel = document.getElementById('gaugeLabel');
+    gauge = document.getElementById('gauge');
 
     db.basicInit();
 });
@@ -26,10 +33,9 @@ emiter.on('basicInit-ready', _ => {
 });
 
 var lastKey = -1;
+
 emiter.on('toolData-ready', (data) => {
-    console.log('Data refreshed');
-    let toolTable = document.getElementById('toolTableRecords');
-    let battSpan = document.getElementById('battSpan');
+    console.log('Data refreshed');  
     for(let i = 0; i < data.length; i++){
         const tr = document.createElement("tr");
 
@@ -53,7 +59,29 @@ emiter.on('toolData-ready', (data) => {
 
         if(data[i].key > lastKey) {
             lastKey = data[i].key;
-            battSpan.innerHTML = data[i].battery + '%';
+            setGauge(data[i].battery);
         }
     }
 });
+
+var lastValue = 100;
+function setGauge(value){
+    gaugeLabel.innerHTML = value + '%';
+    gauge.style.strokeDasharray = value + "," + lastValue;
+    if(value <= 75 && value > 50){
+        gauge.classList.remove('circle');
+        gauge.classList.add('circleWarn');
+        gauge.style.webkitAnimationPlayState="running";
+    }
+    if(value <= 50 && value > 25){
+        gauge.classList.remove('circle');
+        gauge.classList.add('circleWarnSv');
+        gauge.style.webkitAnimationPlayState="running";
+    }
+    if(value <= 25){
+        gauge.classList.remove('circle');
+        gauge.classList.add('circleAlert');
+        gauge.style.webkitAnimationPlayState="running";
+    }
+    lastValue = value;
+};

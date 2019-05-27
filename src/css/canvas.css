@@ -78,22 +78,38 @@
 .circle {
   stroke: #4CC790;
   fill: none;
-  stroke-width: 2.8;
+  stroke-width: 3.8;
   stroke-linecap: round;
-  animation: progress 1s ease-out forwards;
+  animation: progress 0.2s ease-out backwards;
 }
 
 .circleWarn {
-  stroke: yellow;
+  stroke: rgba(130, 240, 4, 0.692);
   fill: none;
-  stroke-width: 2.8;
+  stroke-width: 3.8;
   stroke-linecap: round;
-  animation: progress 1s ease-out forwards;
+  animation: progress 0.2s ease-out backwards;
+}
+
+.circleWarnSv {
+  stroke: rgba(255, 255, 0, 0.747);
+  fill: none;
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  animation: progress 0.2s ease-out backwards;
+}
+
+.circleAlert {
+  stroke: rgb(219, 19, 19);
+  fill: none;
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  animation: progress 0.2s ease-out backwards;
 }
 
 @keyframes progress {
   0% {
-    stroke-dasharray: 0 100;
+    stroke-dasharray: 100 0;
   }
 }
 
@@ -106,4 +122,20 @@
   text-align: center;
   top: 106px;
   left: 132px;
+}
+
+.tblDivTool{
+  overflow: auto;
+  max-height: 180px;
+}
+
+.tblDivMain{
+  overflow: auto;
+  max-height: 300px;
+}
+
+.spnStats{
+  font-size: 2.0em;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
 }

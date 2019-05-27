@@ -19,14 +19,14 @@
                         <div class="panel-heading">Battery Level</div>
                         <div class="panel-body">
                             <svg viewBox="0 0 36 36" class="circular-chart">
-                                    <path class="circleWarn"
-                                        stroke-dasharray="80, 100"
+                                    <path id='gauge' class="circle"
+                                        stroke-dasharray="100, 100"
                                         d="M18 2.0845
                                         a 15.9155 15.9155 0 0 1 0 31.831
                                         a 15.9155 15.9155 0 0 1 0 -31.831"
                                     />
                             </svg>
-                            <span id='battSpan' class='labelX'></span>
+                            <span id='gaugeLabel' class='labelX'></span>
                         </div>
                     </div>
                     <hr />
@@ -69,7 +69,7 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Session data collection</div>
-                        <div class="panel-body">
+                        <div class="panel-body tblDivTool">
                             <table class="table table-bordered table-hover table-dark" id='toolTable'>
                                 <thead>
                                     <tr>
