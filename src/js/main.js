@@ -4,6 +4,8 @@ const {app, BrowserWindow, globalShortcut, ipcMain: ipc} = electron;
 const net = require('net');
 const protobuf = require("protobufjs");
 
+const fs = require('fs');
+
 const server = require('./server');
 const emiter = require('./emiter');
 const constants = require('./constants');
@@ -16,7 +18,7 @@ app.on('ready', _ => {
     globalShortcut.register('CommandOrControl+Q', _ => {app.quit();})
 
     initProtoBuf();
-    server.startupServer();
+    server.startupServer('TELEMETY', null);
 
     mainWindow = new BrowserWindow({
         width: constants.MAIN_WINDOW_WIDTH,
@@ -128,4 +130,22 @@ ipc.on('simulate-ants', (evt) => {
             }
         }, i * constants.SIMULATION_SPEED_MS);
     }
+});
+
+ipc.on('send-video', (evt) => {
+    const client = net.connect(constants.VIDEO_PORT, 'localhost', function() {
+        console.log('CLIENT:: Connected to Video server');
+        let rs = fs.createReadStream(`${app.getAppPath()}/images/stream.mp4`);
+        rs.pipe(client);
+        //client.pipe(rs);
+        //client.write(rs);
+        //client.end();
+    });
+    client.on('data', (data) => {
+        console.log('CLIENT:: ' + data.toString());
+        client.end();
+    });
+    client.on('end', () => {
+        console.log('CLIENT:: disconnected from video server');
+    });
 });

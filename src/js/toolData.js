@@ -1,6 +1,9 @@
 const electron = require('electron');
 const { remote, ipcRenderer : ipc } = electron;
 
+const server = require('./server');
+const fs = require('fs');
+
 const emiter = require('./emiter');
 var db = require('./db');
 
@@ -23,6 +26,30 @@ window.addEventListener('DOMContentLoaded', _ => {
     gauge = document.getElementById('gauge');
 
     db.basicInit();
+
+    let streamTool = document.getElementById('streamTool');
+    let video = document.getElementById('video');
+    let videoCover = document.getElementById('vidCover');
+
+    streamTool.addEventListener('click', _ => {
+        //server.startupServer('VIDEO', video);
+        //ipc.send('send-video');
+        //let rs = fs.createReadStream('./images/stream.mp4');
+        //video.sourceObject = rs;
+        
+        if (video.paused) { 
+            video.play(); 
+            streamTool.innerHTML = 'Stop';
+            videoCover.hidden = true;
+        }
+        else { 
+            video.currentTime = 0;
+            video.load();
+            video.pause();
+            streamTool.innerHTML = 'Stream';
+            videoCover.hidden = false;
+        };
+    });
 });
 
 emiter.on('basicInit-ready', _ => {

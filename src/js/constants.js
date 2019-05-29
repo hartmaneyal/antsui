@@ -14,6 +14,7 @@ module.exports = {
     SERVER_MAX_TOOLS : 10,
     SERVER_SOCKET_TIMEOUT_MS : 1000,
     SERVER_PORT : 1337,
+    VIDEO_PORT: 1338,
     // Map grid
     MAP_WIDTH : 740,
     MAP_HEIGHT : 370,

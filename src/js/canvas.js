@@ -240,36 +240,37 @@ function resetToolTable(){
     document.getElementById('totalTools').innerHTML = '0';
     document.getElementById('timeElapssed').innerHTML = '0';
 
-    /*
-    for(let i = 0; i < 5; i++){
-        const tr = document.createElement("tr");
-        const id = document.createElement("td");
-        id.innerHTML = 1;
-        tr.appendChild(id);
+    let allowMock = true;
+    if(allowMock){
+        for(let i = 0; i < 1; i++){
+            const tr = document.createElement("tr");
+            const id = document.createElement("td");
+            id.innerHTML = 1;
+            tr.appendChild(id);
 
-        const x = document.createElement("td");
-        x.innerHTML = "<span id='x" + 1 + "'>" + 1 + "</span>";
-        tr.appendChild(x);
+            const x = document.createElement("td");
+            x.innerHTML = "<span id='x" + 1 + "'>" + 1 + "</span>";
+            tr.appendChild(x);
 
-        const y = document.createElement("td");
-        y.innerHTML = "<span id='y" + 1 + "'>" + 1 + "</span>";
-        tr.appendChild(y);
+            const y = document.createElement("td");
+            y.innerHTML = "<span id='y" + 1 + "'>" + 1 + "</span>";
+            tr.appendChild(y);
 
-        const battery = document.createElement("td");
-        battery.innerHTML = "<span id='battery" + 1 + "'>" + 1 + "</span>";
-        tr.appendChild(battery);
+            const battery = document.createElement("td");
+            battery.innerHTML = "<span id='battery" + 1 + "'>" + 1 + "</span>";
+            tr.appendChild(battery);
 
-        const action = document.createElement("td");
-        action.innerHTML = "<button type='button' class='btn btn-default' id='action" + 1 + "'>Details</button>";
-        tr.appendChild(action);
+            const action = document.createElement("td");
+            action.innerHTML = "<button type='button' class='btn btn-default' id='action" + 1 + "'>Details</button>";
+            tr.appendChild(action);
 
-        toolTable.appendChild(tr);
+            toolTable.appendChild(tr);
 
-        document.querySelector('#action1').addEventListener('click', (evt) => {
-            ipc.send('tool-details', session, 1);
-        });
+            document.querySelector('#action1').addEventListener('click', (evt) => {
+                ipc.send('tool-details', session, 1);
+            });
+        }
     }
-    */
 }
 
 function updateToolTable(ant, newAnt){
