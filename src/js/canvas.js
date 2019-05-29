@@ -240,7 +240,7 @@ function resetToolTable(){
     document.getElementById('totalTools').innerHTML = '0';
     document.getElementById('timeElapssed').innerHTML = '0';
 
-    let allowMock = true;
+    let allowMock = false;
     if(allowMock){
         for(let i = 0; i < 1; i++){
             const tr = document.createElement("tr");
