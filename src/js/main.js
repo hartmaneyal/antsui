@@ -1,5 +1,5 @@
 const electron = require('electron');
-const {app, BrowserWindow, globalShortcut, ipcMain: ipc} = electron;
+const {app, BrowserWindow, globalShortcut, ipcMain: ipc, Menu, dialog} = electron;
 
 const net = require('net');
 const protobuf = require("protobufjs");
@@ -43,7 +43,63 @@ app.on('ready', _ => {
     mainWindow.on('closed', _ =>{
         mainWindow = null;
     });
+
+    // Main menu
+    setMainMenu();
 });
+
+// ================
+// application menu
+// ================
+
+function setMainMenu(){
+    const name = 'Ants UI';
+    const template = [{
+        label: name,
+        submenu: [{
+            label: `About ${name}`,
+            click: _ => {
+                console.log(`Ants UI ${constants.APP_VERSION}`);
+
+                const options = {
+                    type: 'info',
+                    title: 'About Ants UI',
+                    message: `Ants UI ${constants.APP_VERSION}`,
+                    detail: 'UI for presenting ant movements in a maze'
+                };
+
+                dialog.showMessageBox(null, options);
+            }
+        }, {
+            type: 'separator'
+        }, {
+            label: 'Quit',
+            click: _ => {
+                app.quit();
+            },
+            accelerator: 'CommandOrControl+Q'
+        }]
+    },
+    { 
+        label: 'Simulation',
+        submenu:[{
+            label: 'Show result map',
+            click: _ => { mainWindow.webContents.send('display-map'); }
+        }, {
+            label: 'Simulate ants',
+            click: _ => { mainWindow.webContents.send('simulation-start'); }
+        }, {
+            type: 'separator'
+        }, {
+            label: 'Open Dev tools',
+            click: _ => {
+                mainWindow.webContents.openDevTools();
+            }
+        }]
+    }];
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+};
 
 // ==============
 // details window

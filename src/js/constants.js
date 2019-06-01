@@ -1,4 +1,6 @@
 module.exports = {
+    // App version
+    APP_VERSION : 0.7,
     // Screen size
     MAIN_WINDOW_WIDTH : 1400,
     MAIN_WINDOW_HEIGHT : 1000,

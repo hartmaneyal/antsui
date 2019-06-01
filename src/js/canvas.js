@@ -181,18 +181,34 @@ window.addEventListener('DOMContentLoaded', _ => {
     
     const drawGrid = document.getElementById('drawGrid');
     drawGrid.addEventListener('click', (evt) => {
-        drawFullGrid(cWidth, cHeight, xL, yL);
+        displayMap();
     });
 
     const simulateAnts = document.getElementById('simulateAnts');
     simulateAnts.addEventListener('click', (evt) => {
-        drawEmptyGrid(cWidth, cHeight, xL, yL);
+        simulationStart();
+    });
+});
+
+function displayMap(){
+    drawFullGrid(cWidth, cHeight, xL, yL);
+};
+
+ipc.on('display-map', (evt) => {
+    displayMap();
+});
+
+function simulationStart(){
+    drawEmptyGrid(cWidth, cHeight, xL, yL);
         const ants = document.getElementById('ants');
         ants.innerHTML = "";
         antArray = [];
         startTimer();
         ipc.send('simulate-ants');
-    });
+};
+
+ipc.on('simulation-start', (evt) => {
+    simulationStart();
 });
 
 ipc.on('ant-moved', (evt, ant) => {
