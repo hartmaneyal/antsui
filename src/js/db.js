@@ -84,3 +84,19 @@ exports.getToolData = (inSession, inId, lastKey) => {
         emiter.emit('toolData-ready', result); 
     });
 }
+
+exports.getToolList = (inSession) => {
+    ldb.loadDatabase({}, _ => {
+        tool_data = ldb.getCollection("tool_data");
+        let toolData = tool_data.chain().find({'session': parseInt(inSession, 10)}).data();
+
+        let result = [];
+        for(let i = 0; i < toolData.length; i++){
+            if(!result.includes(toolData[i].id)){
+                result.push(toolData[i].id);
+            }
+        }
+
+        emiter.emit('toolList-ready', result); 
+    });
+}

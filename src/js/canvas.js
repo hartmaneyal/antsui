@@ -177,6 +177,7 @@ window.addEventListener('DOMContentLoaded', _ => {
     emiter.on('db-init', (ses) => {
         session = ses;
         console.log('session: ' + session);
+        ipc.send('set-session', session);
       });
     
     const drawGrid = document.getElementById('drawGrid');

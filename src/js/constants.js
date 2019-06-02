@@ -6,6 +6,8 @@ module.exports = {
     MAIN_WINDOW_HEIGHT : 1000,
     TOOL_WINDOW_WIDTH : 1000,
     TOOL_WINDOW_HEIGHT : 900,
+    FEED_WINDOW_WIDTH : 1000,
+    FEED_WINDOW_HEIGHT : 900,
     // Simulative data refresh rate
     SIMULATION_SPEED_MS : 500,
     // database setting

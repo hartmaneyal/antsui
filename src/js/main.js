@@ -79,8 +79,7 @@ function setMainMenu(){
             },
             accelerator: 'CommandOrControl+Q'
         }]
-    },
-    { 
+    }, { 
         label: 'Simulation',
         submenu:[{
             label: 'Show result map',
@@ -95,6 +94,12 @@ function setMainMenu(){
             click: _ => {
                 mainWindow.webContents.openDevTools();
             }
+        }]
+    }, { 
+        label: 'Tools',
+        submenu:[{
+            label: 'Tools feed',
+            click: _ => { toolFeed(); }
         }]
     }];
     const menu = Menu.buildFromTemplate(template);
@@ -126,6 +131,35 @@ ipc.on('tool-details', (evt, session, antId) => {
         toolWindow = null;
     });
 });
+
+// =================
+// video feed window
+// =================
+
+var sessionId;
+ipc.on('set-session', (evt, session) => {
+    sessionId = session;
+});
+
+function toolFeed(){
+    let feedWindow;
+    feedWindow = new BrowserWindow({
+        width: constants.FEED_WINDOW_WIDTH,
+        height: constants.FEED_WINDOW_HEIGHT,
+        resizeable: false,
+        "webPreferences":{
+            //"webSecurity":false,
+            nodeIntegration: true,
+            nodeIntegrationInWorker: true
+          }
+    });
+
+    feedWindow.loadURL(`file://${app.getAppPath()}/src/html/feed.html?session=${sessionId}`);
+    feedWindow.setResizable(false);
+    feedWindow.on('closed', _ =>{
+        feedWindow = null;
+    });
+};
 
 // ===============
 // Simulative data
