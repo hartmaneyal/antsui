@@ -33,5 +33,7 @@ module.exports = {
     MAP_ENUM_ENTRY : 'entry',
     MAP_ENUM_EXIT : 'exit',
     MAP_ENUM_OPEN : 'open',
-    MAP_ANIME_DURATION : 500
+    MAP_ANIME_DURATION : 500,
+    // feed definitions
+    FEED_COLUMNS : 2 // must be an integer, divideable by 12
 }

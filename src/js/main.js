@@ -106,6 +106,46 @@ function setMainMenu(){
     Menu.setApplicationMenu(menu);
 };
 
+function setFeedMenu(){
+    const name = 'Ants UI';
+    const template = [{
+        label: name,
+        submenu: [{
+            label: `About ${name}`,
+            click: _ => {
+                console.log(`Ants UI ${constants.APP_VERSION}`);
+
+                const options = {
+                    type: 'info',
+                    title: 'About Ants UI',
+                    message: `Ants UI ${constants.APP_VERSION}`,
+                    detail: 'UI for presenting ant movements in a maze'
+                };
+
+                dialog.showMessageBox(null, options);
+            }
+        }, {
+            type: 'separator'
+        }, {
+            label: 'Quit',
+            click: _ => {
+                app.quit();
+            },
+            accelerator: 'CommandOrControl+Q'
+        }]
+    }, { 
+        label: 'Simulation',
+        submenu:[{
+            label: 'Open Dev tools',
+            click: _ => {
+                feedWindow.webContents.openDevTools();
+            }
+        }]
+    }];
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+}
+
 // ==============
 // details window
 // ==============
@@ -141,8 +181,8 @@ ipc.on('set-session', (evt, session) => {
     sessionId = session;
 });
 
+let feedWindow;
 function toolFeed(){
-    let feedWindow;
     feedWindow = new BrowserWindow({
         width: constants.FEED_WINDOW_WIDTH,
         height: constants.FEED_WINDOW_HEIGHT,
@@ -158,7 +198,10 @@ function toolFeed(){
     feedWindow.setResizable(false);
     feedWindow.on('closed', _ =>{
         feedWindow = null;
+        setMainMenu();
     });
+
+    setFeedMenu();
 };
 
 // ===============

@@ -78,6 +78,7 @@ exports.basicInit = () => {
 }
 
 exports.getToolData = (inSession, inId, lastKey) => {
+    console.log('Get tool data for {' + inSession + ", " + inId + ", " + lastKey + "}");
     ldb.loadDatabase({}, _ => {
         tool_data = ldb.getCollection("tool_data");
         let result = tool_data.chain().find({'session': parseInt(inSession, 10), 'id': parseInt(inId, 10), 'key' : {'$gt': parseInt(lastKey, 10)}}).simplesort('tm').data();
@@ -86,6 +87,7 @@ exports.getToolData = (inSession, inId, lastKey) => {
 }
 
 exports.getToolList = (inSession) => {
+    console.log('Get tool list for {' + inSession + "}");
     ldb.loadDatabase({}, _ => {
         tool_data = ldb.getCollection("tool_data");
         let toolData = tool_data.chain().find({'session': parseInt(inSession, 10)}).data();

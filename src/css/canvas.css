@@ -175,3 +175,25 @@
   vertical-align: middle;
   line-height: normal;
 }
+
+.feedDiv{
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 810px;
+}
+
+.feedElement{
+  display: block;
+  z-index: 20;
+  max-width: 400px;
+  margin: 10px;
+}
+
+.feedElementHeader{
+  display: block;
+  z-index: 20;
+}
+
+.borderedDiv{
+  border: solid 1px rgba(194, 191, 191, 0.856);
+}

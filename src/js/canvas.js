@@ -179,16 +179,6 @@ window.addEventListener('DOMContentLoaded', _ => {
         console.log('session: ' + session);
         ipc.send('set-session', session);
       });
-    
-    const drawGrid = document.getElementById('drawGrid');
-    drawGrid.addEventListener('click', (evt) => {
-        displayMap();
-    });
-
-    const simulateAnts = document.getElementById('simulateAnts');
-    simulateAnts.addEventListener('click', (evt) => {
-        simulationStart();
-    });
 });
 
 function displayMap(){
