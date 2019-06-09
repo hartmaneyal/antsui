@@ -178,6 +178,7 @@ window.addEventListener('DOMContentLoaded', _ => {
         session = ses;
         console.log('session: ' + session);
         ipc.send('set-session', session);
+        listenerStart();
       });
 });
 
@@ -235,6 +236,14 @@ ipc.on('ant-moved', (evt, ant) => {
     updateGrid(ant);
     updateToolTable(ant, newAnt);
 });
+
+function listenerStart(){
+    drawEmptyGrid(cWidth, cHeight, xL, yL);
+        const ants = document.getElementById('ants');
+        ants.innerHTML = "";
+        antArray = [];
+        startTimer();
+};
 
 // ==========================
 // Tool table control

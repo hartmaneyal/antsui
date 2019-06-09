@@ -1,7 +1,8 @@
 const electron = require('electron');
 const {app, BrowserWindow, globalShortcut, ipcMain: ipc, Menu, dialog} = electron;
 
-const net = require('net');
+//const net = require('net');
+const dgram = require('dgram');
 const protobuf = require("protobufjs");
 
 const fs = require('fs');
@@ -18,7 +19,7 @@ app.on('ready', _ => {
     globalShortcut.register('CommandOrControl+Q', _ => {app.quit();})
 
     initProtoBuf();
-    server.startupServer('TELEMETY', null);
+    server.startupServer();
 
     mainWindow = new BrowserWindow({
         width: constants.MAIN_WINDOW_WIDTH,
@@ -242,43 +243,16 @@ ipc.on('simulate-ants', (evt) => {
             }
             else{
                 const message = TelemetryMessage.create(payload);
-                var buffer = TelemetryMessage.encode(message).finish();
+                const buffer = TelemetryMessage.encode(message).finish();
 
-                const client = net.connect(constants.SERVER_PORT, 'localhost', function() {
-                    console.log('CLIENT:: Connected');
-                    client.write(buffer);
-                    client.end();
-                    if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
-                });
-                client.on('data', (data) => {
-                    console.log('CLIENT:: ' + data.toString());
-                    client.end();
-                    if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
-                });
-                client.on('end', () => {
-                    console.log('CLIENT:: disconnected from server');
-                });
+               const client = dgram.createSocket('udp4');
+               client.send(buffer, constants.MCAST_PORT, 'localhost', (err) => {
+                   if (err != null) console.log('Err: ' + err);
+                   client.close();
+               });
 
                 if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
             }
         }, i * constants.SIMULATION_SPEED_MS);
     }
-});
-
-ipc.on('send-video', (evt) => {
-    const client = net.connect(constants.VIDEO_PORT, 'localhost', function() {
-        console.log('CLIENT:: Connected to Video server');
-        let rs = fs.createReadStream(`${app.getAppPath()}/images/stream.mp4`);
-        rs.pipe(client);
-        //client.pipe(rs);
-        //client.write(rs);
-        //client.end();
-    });
-    client.on('data', (data) => {
-        console.log('CLIENT:: ' + data.toString());
-        client.end();
-    });
-    client.on('end', () => {
-        console.log('CLIENT:: disconnected from video server');
-    });
 });

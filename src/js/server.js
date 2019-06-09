@@ -1,14 +1,12 @@
 const electron = require('electron');
 const {app} = electron;
 
-const net = require('net');
+//const net = require('net');
+const dgram = require('dgram');
 const protobuf = require("protobufjs");
 
 const emiter = require('./emiter');
 const constants = require('./constants');
-
-const socketTimeout = constants.SERVER_SOCKET_TIMEOUT; // in seconds
-const maxAnts = constants.SERVER_MAX_TOOLS;
 
 // Telemetry-Protobuff init
 let TelemetryMessage;
@@ -21,79 +19,37 @@ function initProtoBuf(){
   });
 };
 
-var serverMode;
-var videoElement;
-
 // ======================
 // Create listener/server
 // ======================
-exports.startupServer = (mode, video) => {
-    serverMode = mode;
-    videoElement = video;
+exports.startupServer = () => {
+    initProtoBuf();
+    const client = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
-    if(serverMode == 'TELEMETY') initProtoBuf();
-    const server = net.createServer();
-    server.on('connection', function(socket){
-        console.log('SERVER:: REMOTE Socket is listening at port : ' + socket.remotePort);
-        console.log('SERVER:: REMOTE Socket ip :' + socket.remoteAddress);
-        console.log('SERVER:: REMOTE Socket is IP4/IP6 : ' + socket.remoteFamily);
-
-        socket.setTimeout(socketTimeout * constants.SERVER_SOCKET_TIMEOUT_MS, function(){
-            console.log('SERVER:: Socket timed out');
-            socket.end('SERVER:: Timed out!');
-        });
-
-        socket.on('data', function(data){
-            var bread = socket.bytesRead;
-            var bwrite = socket.bytesWritten;
-            console.log('SERVER:: Bytes read : ' + bread);
-            console.log('SERVER:: Bytes written : ' + bwrite);
-            console.log('SERVER:: Data sent to server : ' + data);
-
-            if(serverMode == 'TELEMETY'){
-                const message = TelemetryMessage.decode(data);
-                socket.end("SERVER:: Transfer complete successfully");
-                console.log('SERVER:: Message:' + message);
-                emiter.emit('ant-move-data', message);
-            }
-            if(serverMode == 'VIDEO'){
-                videoElement.src = window.URL.createObjectURL(data)
-            }
-        });
-
-        socket.on('timeout', function(){
-            console.log('SERVER:: Socket timed out !');
-            socket.end('SERVER:: Timed out!');
-        });
-
-        socket.on('end', function(data){
-            console.log('SERVER:: Socket ended from other end!');
-            console.log('SERVER:: End data : ' + data);
-        });
-
-        socket.on('close', function(error){
-            var bread = socket.bytesRead;
-            var bwrite = socket.bytesWritten;
-            console.log('SERVER:: Bytes read : ' + bread);
-            console.log('SERVER:: Bytes written : ' + bwrite);
-            console.log('SERVER:: Socket closed!');
-            if(error){
-            console.log('SERVER:: Socket was closed coz of transmission error');
-            }
-        }); 
-
-        setTimeout(function(){
-            var isdestroyed = socket.destroyed;
-            console.log('SERVER:: Socket destroyed:' + isdestroyed);
-            socket.destroy();
-        },socketTimeout * constants.SERVER_SOCKET_TIMEOUT_MS);
+    client.on('listening', function () {
+        const address = client.address();
+        console.log('UDP Client listening on ' + address.address + ":" + address.port);
+        client.setBroadcast(true)
+        client.setMulticastTTL(constants.MCAST_TTL); 
+        client.addMembership(constants.MCAST_ADDR);
     });
 
-    server.on('error',function(error){
-        console.log('SERVER:: Error: ' + error);
+    client.on('message', function (message, remote) {   
+        console.log('MCast Msg: From: ' + remote.address + ':' + remote.port +' - ' + message);
+        const err = TelemetryMessage.verify(message);
+        if (err){
+            console.log('SERVER:: Message err:' + err);
+        }
+        else{
+            console.log('SERVER:: Message OK');
+        }
+        const metryMessage = TelemetryMessage.decode(message);
+        console.log('SERVER::ant id: ' + metryMessage.id + 
+                            ',x='+metryMessage.x + ',y=' + metryMessage.y + 
+                            ',angle=' + metryMessage.angle + ',ll='+metryMessage.ll + 
+                            ',ul=' + metryMessage.ul + ',bl=' + metryMessage.bl + ',rl='+metryMessage.rl);
+        emiter.emit('ant-move-data', metryMessage);
     });
-
-    server.maxConnections = maxAnts;
-    if(serverMode == 'TELEMETY') server.listen(constants.SERVER_PORT, 'localhost');
-    if(serverMode == 'VIDEO') server.listen(constants.VIDEO_PORT, 'localhost');
+ 
+    client.bind(constants.MCAST_PORT)
 };

@@ -22,8 +22,8 @@ module.exports = {
     // Map grid
     MAP_WIDTH : 740,
     MAP_HEIGHT : 370,
-    MAP_X_LINES : 20,
-    MAP_Y_LINES : 10,
+    MAP_X_LINES : 30,
+    MAP_Y_LINES : 30,
     MAP_GRID_LINE_COLOR : '#5bcb6b',
     MAP_SPECIAL_LINE_COLOR : 'green',
     MAP_WALL_LINE_COLOR : 'purple',
@@ -35,5 +35,10 @@ module.exports = {
     MAP_ENUM_OPEN : 'open',
     MAP_ANIME_DURATION : 500,
     // feed definitions
-    FEED_COLUMNS : 2 // must be an integer, divideable by 12
+    FEED_COLUMNS : 2, // must be an integer, divideable by 12
+    //MCAST parameters
+    MCAST_ADDR : "230.185.192.108",
+    MCAST_HOST : '127.0.0.1',
+    MCAST_PORT : 41848,
+    MCAST_TTL : 128
 }
