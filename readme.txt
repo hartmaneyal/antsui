@@ -10,4 +10,7 @@ To test the UI:
    run: npm install popper.js --save
    run: npm install bootstrap
    run: npm install timer-stopwatch
+
+   optional for now: npm install open-iconic
+
 5. run: npm start

@@ -1,5 +1,6 @@
 const electron = require('electron');
 const { remote, ipcRenderer : ipc } = electron;
+const { Menu, MenuItem } = remote;
 
 const constants = require('./constants');
 const anime = require('animejs');
@@ -20,6 +21,8 @@ const imgWidth = xStep/2;
 const imgHeight = yStep/2;
 let gridTop;
 let gridLeft;
+let gridRight;
+let gridBottom;
 
 const gridLineColor = constants.MAP_GRID_LINE_COLOR;
 const specialLineColor = constants.MAP_SPECIAL_LINE_COLOR;
@@ -64,6 +67,8 @@ function initGrid(canvasWidth, canvasHeight){
 
     gridTop = rect.top;
     gridLeft = rect.left;
+    gridRight = rect.right;
+    gridBottom = rect.bottom;
 
     resetToolTable();
 
@@ -178,8 +183,13 @@ window.addEventListener('DOMContentLoaded', _ => {
         session = ses;
         console.log('session: ' + session);
         ipc.send('set-session', session);
-        listenerStart();
-      });
+        if(constants.MCAST_AUTO_START) 
+            listenerStart();
+        else
+            drawEmptyGrid(cWidth, cHeight, xL, yL);
+    });
+
+    rightClickMenu();
 });
 
 function displayMap(){
@@ -212,6 +222,11 @@ ipc.on('ant-moved', (evt, ant) => {
         console.log("added ant");
         newAnt = true;
     }
+    
+    if(constants.MAP_INVERT_Y){
+        console.log('Inverting Y');
+        ant.y = constants.MAP_Y_LINES - ant.y + 1;
+    }
     db.insertToolRecord(session, ant);
 
     let antEl = document.getElementById(`ant${ant.id}`);
@@ -239,10 +254,47 @@ ipc.on('ant-moved', (evt, ant) => {
 
 function listenerStart(){
     drawEmptyGrid(cWidth, cHeight, xL, yL);
-        const ants = document.getElementById('ants');
-        ants.innerHTML = "";
-        antArray = [];
-        startTimer();
+    const ants = document.getElementById('ants');
+    ants.innerHTML = "";
+    antArray = [];
+    startTimer();
+};
+
+// ==========================
+// context menu
+// ==========================
+
+var contextMenu = new Menu();
+let rightClickPosition = null;
+function rightClickMenu(){
+    contextMenu.append(new MenuItem({ label: 'Mark as not relevant', click(evt) { markNotRelevant(); }, icon: './images/not_relevant.png' }));
+    contextMenu.append(new MenuItem({ label: 'Prioritize exploration', click() { console.log('Area prioritized for exploration') }, icon: './images/explore.png' }));
+    contextMenu.append(new MenuItem({ label: 'Mark area as blocked', click() { console.log('Area marked as blocked') }, icon: './images/blocked.png' }));
+    contextMenu.append(new MenuItem({ type: 'separator' }));
+    contextMenu.append(new MenuItem({ label: 'Send ant to entrance', click() { console.log('Ant returning to entrance') }, icon: './images/return.png' }));
+    contextMenu.append(new MenuItem({ label: 'Move ant to', click() { console.log('Moving ant to new area') }, icon: './images/go_to.png' }));
+
+    window.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        rightClickPosition = {x: e.x, y: e.y};
+        contextMenu.popup({ window: remote.getCurrentWindow()});
+    }, false);
+};
+
+function markNotRelevant(){
+    console.log('Area marked as not relevant {' + rightClickPosition.x + ',' + rightClickPosition.y + '}');
+    if(!isWithinCanvas()){
+        console.log('Area not on canvas {' + rightClickPosition.x + ':' + gridRight + ',' + gridLeft + '-' + rightClickPosition.y + ':' + gridTop + ',' + gridBottom + '}');
+    }
+    const leftLine = Math.floor( (rightClickPosition.x - gridRight) / xStep );
+    const upperLine = Math.floor( (rightClickPosition.y - gridBottom) / yStep );
+    console.log('Area lines {' + leftLine + ',' + upperLine + '}');
+};
+
+function isWithinCanvas(){
+    if(rightClickPosition.x > gridRight || rightClickPosition.x < gridLeft) return false;
+    if(rightClickPosition.y > gridBottom || rightClickPosition.y < gridTop) return false;
+    return true;
 };
 
 // ==========================

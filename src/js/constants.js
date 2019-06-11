@@ -1,6 +1,6 @@
 module.exports = {
     // App version
-    APP_VERSION : 0.7,
+    APP_VERSION : 0.85,
     // Screen size
     MAIN_WINDOW_WIDTH : 1400,
     MAIN_WINDOW_HEIGHT : 1000,
@@ -13,7 +13,7 @@ module.exports = {
     // database setting
     DATABASE_LOCATION : './db/antsui.db',
     DATABASE_AUTOSAVE_MS : 1000,
-    // Server settings
+    // NET Server settings
     SERVER_SOCKET_TIMEOUT : 6,
     SERVER_MAX_TOOLS : 10,
     SERVER_SOCKET_TIMEOUT_MS : 1000,
@@ -34,11 +34,13 @@ module.exports = {
     MAP_ENUM_EXIT : 'exit',
     MAP_ENUM_OPEN : 'open',
     MAP_ANIME_DURATION : 500,
+    MAP_INVERT_Y : true,
     // feed definitions
     FEED_COLUMNS : 2, // must be an integer, divideable by 12
     //MCAST parameters
     MCAST_ADDR : "230.185.192.108",
     MCAST_HOST : '127.0.0.1',
     MCAST_PORT : 41848,
-    MCAST_TTL : 128
+    MCAST_TTL : 128,
+    MCAST_AUTO_START : false
 }
