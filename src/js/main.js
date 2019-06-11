@@ -17,6 +17,7 @@ const constants = require('./constants');
 let mainWindow;
 app.on('ready', _ => {
     globalShortcut.register('CommandOrControl+Q', _ => {app.quit();})
+    globalShortcut.register('CommandOrControl+R', _ => {mainWindow.reload();})
 
     initProtoBuf();
     server.startupServer();

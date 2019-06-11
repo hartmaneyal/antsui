@@ -222,7 +222,7 @@ ipc.on('ant-moved', (evt, ant) => {
         console.log("added ant");
         newAnt = true;
     }
-    
+
     if(constants.MAP_INVERT_Y){
         console.log('Inverting Y');
         ant.y = constants.MAP_Y_LINES - ant.y + 1;
@@ -268,8 +268,9 @@ var contextMenu = new Menu();
 let rightClickPosition = null;
 function rightClickMenu(){
     contextMenu.append(new MenuItem({ label: 'Mark as not relevant', click(evt) { markNotRelevant(); }, icon: './images/not_relevant.png' }));
-    contextMenu.append(new MenuItem({ label: 'Prioritize exploration', click() { console.log('Area prioritized for exploration') }, icon: './images/explore.png' }));
-    contextMenu.append(new MenuItem({ label: 'Mark area as blocked', click() { console.log('Area marked as blocked') }, icon: './images/blocked.png' }));
+    contextMenu.append(new MenuItem({ label: 'Prioritize exploration', click() { markPriority(); }, icon: './images/explore.png' }));
+    contextMenu.append(new MenuItem({ label: 'Mark area as blocked', click() { markBlocked(); }, icon: './images/blocked.png' }));
+    contextMenu.append(new MenuItem({ label: 'Clear markup', click() { clearMarkup(); }, icon: './images/clear.png' }));
     contextMenu.append(new MenuItem({ type: 'separator' }));
     contextMenu.append(new MenuItem({ label: 'Send ant to entrance', click() { console.log('Ant returning to entrance') }, icon: './images/return.png' }));
     contextMenu.append(new MenuItem({ label: 'Move ant to', click() { console.log('Moving ant to new area') }, icon: './images/go_to.png' }));
@@ -285,16 +286,62 @@ function markNotRelevant(){
     console.log('Area marked as not relevant {' + rightClickPosition.x + ',' + rightClickPosition.y + '}');
     if(!isWithinCanvas()){
         console.log('Area not on canvas {' + rightClickPosition.x + ':' + gridRight + ',' + gridLeft + '-' + rightClickPosition.y + ':' + gridTop + ',' + gridBottom + '}');
+        return;
     }
-    const leftLine = Math.floor( (rightClickPosition.x - gridRight) / xStep );
-    const upperLine = Math.floor( (rightClickPosition.y - gridBottom) / yStep );
-    console.log('Area lines {' + leftLine + ',' + upperLine + '}');
+    const leftLine = Math.floor( (rightClickPosition.x - gridLeft) / xStep );
+    const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
+    gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_IRRELEVANT_CELL);
+};
+
+function markPriority(){
+    console.log('Area prioritized for exploration {' + rightClickPosition.x + ',' + rightClickPosition.y + '}');
+    if(!isWithinCanvas()){
+        console.log('Area not on canvas {' + rightClickPosition.x + ':' + gridRight + ',' + gridLeft + '-' + rightClickPosition.y + ':' + gridTop + ',' + gridBottom + '}');
+        return;
+    }
+    const leftLine = Math.floor( (rightClickPosition.x - gridLeft) / xStep );
+    const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
+    gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_PRIORITY_CELL);
+};
+
+function markBlocked(){
+    console.log('Area marked as blocked {' + rightClickPosition.x + ',' + rightClickPosition.y + '}');
+    if(!isWithinCanvas()){
+        console.log('Area not on canvas {' + rightClickPosition.x + ':' + gridRight + ',' + gridLeft + '-' + rightClickPosition.y + ':' + gridTop + ',' + gridBottom + '}');
+        return;
+    }
+    const leftLine = Math.floor( (rightClickPosition.x - gridLeft) / xStep );
+    const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
+    gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_BLOCKED_CELL);
+};
+
+function clearMarkup(){
+    console.log('Area marked as blocked {' + rightClickPosition.x + ',' + rightClickPosition.y + '}');
+    if(!isWithinCanvas()){
+        console.log('Area not on canvas {' + rightClickPosition.x + ':' + gridRight + ',' + gridLeft + '-' + rightClickPosition.y + ':' + gridTop + ',' + gridBottom + '}');
+        return;
+    }
+    const leftLine = Math.floor( (rightClickPosition.x - gridLeft) / xStep );
+    const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
+    const ctx = canvas.getContext('2d');
+    gridBlockClear(leftLine*xStep, yStep*upperLine, xStep, yStep);
 };
 
 function isWithinCanvas(){
     if(rightClickPosition.x > gridRight || rightClickPosition.x < gridLeft) return false;
     if(rightClickPosition.y > gridBottom || rightClickPosition.y < gridTop) return false;
     return true;
+};
+
+function gridBlockRecolor(fromx, fromY, width, height, color){
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = color; 
+    ctx.fillRect(fromx + 2, fromY + 2, width - 4, height - 4);
+};
+
+function gridBlockClear(fromx, fromY, width, height){
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(fromx + 2, fromY + 2, width - 4, height - 4);
 };
 
 // ==========================
