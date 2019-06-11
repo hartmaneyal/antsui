@@ -341,7 +341,7 @@ function gridBlockRecolor(fromx, fromY, width, height, color){
 
 function gridBlockClear(fromx, fromY, width, height){
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(fromx + 2, fromY + 2, width - 4, height - 4);
+    ctx.clearRect(fromx + 1, fromY + 1, width - 2, height - 2);
 };
 
 // ==========================
