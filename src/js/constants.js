@@ -22,7 +22,7 @@ module.exports = {
     // Map grid
     MAP_WIDTH : 740,
     MAP_HEIGHT : 370,
-    MAP_X_LINES : 30,
+    MAP_X_LINES : 50,
     MAP_Y_LINES : 30,
     MAP_GRID_LINE_COLOR : '#5bcb6b',
     MAP_SPECIAL_LINE_COLOR : 'green',
