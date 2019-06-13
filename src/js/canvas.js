@@ -5,6 +5,8 @@ const { Menu, MenuItem } = remote;
 const constants = require('./constants');
 const anime = require('animejs');
 
+const fs = require('fs');
+
 const emiter = require('./emiter');
 var db = require('./db');
 var session;
@@ -290,7 +292,9 @@ function markNotRelevant(){
     }
     const leftLine = Math.floor( (rightClickPosition.x - gridLeft) / xStep );
     const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
+
     gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_IRRELEVANT_CELL);
+    db.storeUiCommand(session, 'MarkNotRelevant', leftLine+1, upperLine);
 };
 
 function markPriority(){
@@ -302,6 +306,7 @@ function markPriority(){
     const leftLine = Math.floor( (rightClickPosition.x - gridLeft) / xStep );
     const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
     gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_PRIORITY_CELL);
+    db.storeUiCommand(session, 'MarkPriority', leftLine+1, upperLine);
 };
 
 function markBlocked(){
@@ -313,6 +318,7 @@ function markBlocked(){
     const leftLine = Math.floor( (rightClickPosition.x - gridLeft) / xStep );
     const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
     gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_BLOCKED_CELL);
+    db.storeUiCommand(session, 'MarkBlocked', leftLine+1, upperLine);
 };
 
 function clearMarkup(){
@@ -325,6 +331,7 @@ function clearMarkup(){
     const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
     const ctx = canvas.getContext('2d');
     gridBlockClear(leftLine*xStep, yStep*upperLine, xStep, yStep);
+    db.storeUiCommand(session, 'ClearMarkup', leftLine+1, upperLine);
 };
 
 function isWithinCanvas(){
@@ -343,6 +350,53 @@ function gridBlockClear(fromx, fromY, width, height){
     const ctx = canvas.getContext('2d');
     ctx.clearRect(fromx + 1, fromY + 1, width - 2, height - 2);
 };
+
+// =================
+// export data
+// =================
+
+ipc.on('export-data', (evt) => {
+    if (!fs.existsSync(constants.EXPORT_FOLDER)){
+        fs.mkdirSync(constants.EXPORT_FOLDER);
+    }
+    db.getAllToolData(1);
+    db.getUiCommandsData(180);
+});
+
+emiter.on('allToolData-ready', (data) => {
+    const stream = fs.createWriteStream(constants.EXPORT_FILE_DATA);
+    stream.once('open', function(fd) {
+        stream.write('[');
+        let first = true;
+        for(let i = 0; i < data.length; i++){
+            if(!first) 
+                stream.write(",\n");
+            else 
+                first = false;
+            stream.write(`{"key":${data[i].key},"session":${data[i].session},"id":${data[i].id},"x":${data[i].x},"y":${data[i].y},"battery":${data[i].battery},"tm":${data[i].tm}}`);
+        }
+        stream.write(']');
+        stream.end();
+    });
+});
+
+emiter.on('getUiCommandsData-ready', (data) => {
+    console.log('here');
+    const stream = fs.createWriteStream(constants.EXPORT_FILE_COMMANDS);
+    stream.once('open', function(fd) {
+        stream.write('[');
+        let first = true;
+        for(let i = 0; i < data.length; i++){
+            if(!first) 
+                stream.write(",\n");
+            else 
+                first = false;
+            stream.write(`{"session":${data[i].session},"command":${data[i].command},"x":${data[i].x},"y":${data[i].y},"tm":${data[i].tm}}`);
+        }
+        stream.write(']');
+        stream.end();
+    });
+});
 
 // ==========================
 // Tool table control

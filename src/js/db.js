@@ -75,7 +75,7 @@ exports.basicInit = () => {
             emiter.emit('basicInit-ready'); 
         }
     });
-}
+};
 
 exports.getToolData = (inSession, inId, lastKey) => {
     console.log('Get tool data for {' + inSession + ", " + inId + ", " + lastKey + "}");
@@ -84,7 +84,7 @@ exports.getToolData = (inSession, inId, lastKey) => {
         let result = tool_data.chain().find({'session': parseInt(inSession, 10), 'id': parseInt(inId, 10), 'key' : {'$gt': parseInt(lastKey, 10)}}).simplesort('tm').data();
         emiter.emit('toolData-ready', result); 
     });
-}
+};
 
 exports.getToolList = (inSession) => {
     console.log('Get tool list for {' + inSession + "}");
@@ -101,4 +101,34 @@ exports.getToolList = (inSession) => {
 
         emiter.emit('toolList-ready', result); 
     });
-}
+};
+
+exports.storeUiCommand = (inSession, inCommand, inX, inY) => {
+    console.log('Store tool command for {' + inSession + ", " + inCommand + "}");
+    ldb.loadDatabase({}, _ => {
+        let ui_commands = ldb.getCollection("ui_commands");
+        if(ui_commands == null){
+            ui_commands = ldb.addCollection("ui_commands");
+        }
+        ui_commands.insert({  session: inSession, command: inCommand, x: inX, y: inY, dt: (new Date()).getTime() });
+        ldb.saveDatabase();   
+    });
+};
+
+exports.getAllToolData = (inSession) => {
+    console.log('Get all tool data for {' + inSession + "}");
+    ldb.loadDatabase({}, _ => {
+        tool_data = ldb.getCollection("tool_data");
+        let result = tool_data.chain().find({'session': parseInt(inSession, 10)}).simplesort('tm').data();
+        emiter.emit('allToolData-ready', result); 
+    });
+};
+
+exports.getUiCommandsData = (inSession) => {
+    console.log('Get all UI commands data for {' + inSession + "}");
+    ldb.loadDatabase({}, _ => {
+        ui_commands = ldb.getCollection("ui_commands");
+        let result = ui_commands.chain().find({'session': parseInt(inSession, 10)}).simplesort('tm').data();
+        emiter.emit('getUiCommandsData-ready', result); 
+    });
+};

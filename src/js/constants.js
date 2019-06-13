@@ -45,5 +45,9 @@ module.exports = {
     MCAST_HOST : '127.0.0.1',
     MCAST_PORT : 41848,
     MCAST_TTL : 128,
-    MCAST_AUTO_START : false
+    MCAST_AUTO_START : false,
+    // EXPORT
+    EXPORT_FOLDER : './export',
+    EXPORT_FILE_DATA : './export/data.json',
+    EXPORT_FILE_COMMANDS : './export/commands.json'
 }

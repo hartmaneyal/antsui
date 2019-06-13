@@ -102,6 +102,12 @@ function setMainMenu(){
         submenu:[{
             label: 'Tools feed',
             click: _ => { toolFeed(); }
+        }, {
+            label: 'Fold Ants',
+            click: _ => { console.log('Folding all ants'); }
+        }, {
+            label: 'Export simulation',
+            click: _ => { mainWindow.webContents.send('export-data'); }
         }]
     }];
     const menu = Menu.buildFromTemplate(template);
