@@ -33,12 +33,11 @@ emiter.on('toolList-ready', (data) => {
         if(toolColumns > constants.FEED_COLUMNS){
             feedDiv.appendChild(rowDiv);
             rowDiv = createRowDiv();
-            toolColumns = 0;
+            toolColumns = 1;
             usedColumns = 0;
         }
         let colDiv = createColumnDiv();
-        colDiv.appendChild(createHeaderDiv(data[i]));
-        colDiv.appendChild(createVideoFeed());
+        colDiv.appendChild(createPanelDiv(data[i]));
         rowDiv.appendChild(colDiv);
         usedColumns++;
     }
@@ -58,18 +57,41 @@ function createColumnDiv(){
     const clsSize = 12/constants.FEED_COLUMNS;
     div.classList.add('col-md-' + clsSize);
     div.classList.add('col-sm-' + clsSize);
-    div.classList.add('borderedDiv');
     return div;
 };
 
-function createHeaderDiv(toolId){
+function createPanelDiv(toolId){
     const div = document.createElement('div');
-    div.classList.add('feedElementHeader');
-    div.innerHTML = "Tool ID " + toolId;
-    return div;
-}
+    div.classList.add('panel');
+    div.classList.add('panel-primary');
 
-function createVideoFeed(){
+    div.appendChild(createPanelHeaderDiv(toolId));
+    div.appendChild(createPanelBodyDiv(toolId));
+
+    return div;
+};
+
+function createPanelHeaderDiv(toolId){
+    const div = document.createElement('div');
+    div.classList.add('panel-heading');
+
+    const h3 = document.createElement('h3');
+    h3.classList.add('panel-title');
+    h3.innerHTML = "Tool ID " + toolId;
+
+    div.appendChild(h3);
+    return div;
+};
+
+function createPanelBodyDiv(toolId){
+    const div = document.createElement('div');
+    div.classList.add('panel-body');
+
+    div.appendChild(createVideoFeed(toolId));
+    return div;
+};
+
+function createVideoFeed(toolId){
     const video = document.createElement('video');
     video.classList.add('feedElement');
     video.src = "../../images/stream.mp4";

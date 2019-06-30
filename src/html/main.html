@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>     
+        <link rel="stylesheet" href="../css/canvas.css">
+        <link rel="stylesheet" type="text/css" href="../css/ds.css" /> 
+    </head>
+    <body>
+        <div id="ants" class="antsContainer"></div>
+        <div id="uiWrapper">
+            <div class="row">
+                <div class="col-md-12">
+                        <h1>Ants UI <small>controller client</small> <img src="../../images/logo.png" class="antX"></h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-primary pannelSlim">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Stats</h3>
+                        </div>
+                        <div class="panel-body pannelBodySlim">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="panel panel-default pannelSlim">
+                                        <div class="panel-heading">Time Elapssed</div>
+                                        <div class="panel-body spnStats">
+                                            <span id='timeElapssed'>0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel panel-default pannelSlim">
+                                        <div class="panel-heading">Total tools</div>
+                                        <div class="panel-body spnStats">
+                                            <span id='totalTools'>0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel panel-default pannelSlim">
+                                        <div class="panel-heading">Area Mapped</div>
+                                        <div class="panel-body spnStats">
+                                            <span id='areaMapped'>35 m2</span>
+                                        </div>
+                                    </div>
+                                </div>        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 pannelCellSlimRight">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Mapping view</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="gridContainer">
+                                <canvas id="grid"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 pannelCellSlimLeft">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Tool tracking </h3>
+                        </div>
+                        <div class="panel-body tblDivMain">
+                            <table class="table table-bordered table-hover table-dark" id='toolTable'>
+                                <thead>
+                                    <tr>
+                                        <th data-field='id' scope="col">ID</th>
+                                        <th data-field='x' scope="col">Pos. X</th>
+                                        <th data-field='y' scope="col">Pos. Y</th>
+                                        <th data-field='battery' scope="col">Battery</th>
+                                        <th data-field='action' scope="col">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="toolTableRecords"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+        </div>
+
+        <script>
+            window.$ = window.jQuery = require('jquery');
+            window.Bootstrap = require('bootstrap');
+            require('../js/canvas')
+        </script>
+    </body>
+</html>

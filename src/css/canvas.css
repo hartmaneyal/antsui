@@ -33,7 +33,7 @@
 }
 
 #gridContainer {
-    min-height: 380px;
+    min-height: 550px;
     color:#fff;
     text-align:center;
     background-image: url('../../images/bg.jpg');
@@ -131,7 +131,7 @@
 
 .tblDivMain{
   overflow: auto;
-  max-height: 300px;
+  max-height: 589px;
 }
 
 .spnStats{
@@ -196,4 +196,23 @@
 
 .borderedDiv{
   border: solid 1px rgba(194, 191, 191, 0.856);
+}
+
+.pannelBodySlim{
+  padding: 5px !important;
+}
+
+.pannelCellSlimLeft{
+  padding-left: 5px !important;
+}
+.pannelCellSlimRight{
+  padding-right: 5px !important;
+}
+
+.pannelSlim{
+  margin-bottom: 5px !important;
+}
+
+body{
+  overflow:hidden;
 }

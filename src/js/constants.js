@@ -20,9 +20,9 @@ module.exports = {
     SERVER_PORT : 1337,
     VIDEO_PORT: 1338,
     // Map grid
-    MAP_WIDTH : 740,
-    MAP_HEIGHT : 370,
-    MAP_X_LINES : 50,
+    MAP_WIDTH : 550, // was 740    gridContainer min-height: 380px; tblDivMain max-height 300px;
+    MAP_HEIGHT : 550, // was 370
+    MAP_X_LINES : 30, // was 50
     MAP_Y_LINES : 30,
     MAP_GRID_LINE_COLOR : '#5bcb6b',
     MAP_SPECIAL_LINE_COLOR : 'green',
