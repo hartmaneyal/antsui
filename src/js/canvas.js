@@ -442,9 +442,11 @@ function resetToolTable(){
     }
 }
 
+let selectedAntId = 0;
 function updateToolTable(ant, newAnt){
     if(newAnt){
         const tr = document.createElement("tr");
+        tr.id = `tra${ant.id}`;
 
         const id = document.createElement("td");
         id.innerHTML = ant.id;
@@ -473,6 +475,24 @@ function updateToolTable(ant, newAnt){
         document.querySelector('#action' + ant.id).addEventListener('click', (evt) => {
             console.log(ant.id);
             ipc.send('tool-details', session, ant.id);
+        });
+
+        tr.addEventListener('click', (e) => {
+            console.log("clicked " + ant.id);
+
+            if(selectedAntId != 0){
+                document.getElementById(`ant${selectedAntId}`).classList.remove('antSelected');
+                document.getElementById(`ant${selectedAntId}`).classList.add('ant');
+                document.getElementById(`tra${selectedAntId}`).classList.remove('selectedTr');
+            }
+            if(selectedAntId != ant.id){
+                document.getElementById(`ant${ant.id}`).classList.remove('ant');
+                document.getElementById(`ant${ant.id}`).classList.add('antSelected');
+                document.getElementById(`tra${ant.id}`).classList.add('selectedTr');
+                selectedAntId = ant.id;
+            }
+            else
+                selectedAntId = 0;
         });
     } 
     else{

@@ -6276,3 +6276,7 @@ table.tablesorter thead tr th:hover {
                     right: auto;
                 }
         }
+
+.selectedTr{
+  background: #1f79a3;
+}
