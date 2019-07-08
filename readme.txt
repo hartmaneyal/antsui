@@ -1,5 +1,5 @@
 To test the UI:
-1. install NPM: https://wsvincent.com/install-node-js-npm-windows/
+1. install NPM: https://wsvincent.com/install-node-js-npm-windows/ or https://nodejs.org/en/
 2. clone the Ants project locally using GIT
 3. open the folder ants-ui
 4. run: npm install electron -d
