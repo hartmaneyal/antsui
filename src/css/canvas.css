@@ -12,13 +12,35 @@
     filter: brightness(0.05);
 }
 
-.antSelected{
+.antDown{
   z-index: 100;
   position: absolute;
   filter: hue-rotate(180deg);
-  filter: brightness(0.15);
-  border: solid red 2px;
 }
+
+.antSelected{
+  -webkit-animation: borderBlink 1s step-end infinite;    
+  animation: borderBlink 1s step-end infinite;   
+  border:2px dotted red;
+}
+
+@-webkit-keyframes borderBlink {    
+  from, to {    
+      border-color: transparent    
+  }    
+  50% {    
+      border-color: black    
+  }    
+}  
+
+@keyframes borderBlink {    
+  from, to {    
+      border-color: transparent    
+  }    
+  50% {    
+      border-color: red    
+  }    
+}   
 
 .antX{
     z-index: 100;

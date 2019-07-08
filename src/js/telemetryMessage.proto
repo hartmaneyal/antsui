@@ -11,4 +11,5 @@ message TelemetryMessage{
     required string rl = 7; 
     required string bl = 8;
     required sfixed32 battery = 9;
+    required string type = 10;
 }

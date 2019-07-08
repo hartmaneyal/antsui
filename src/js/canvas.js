@@ -141,7 +141,7 @@ function initAnt(antId){
     const img = new Image();
     img.id = 'ant' + antId;
     img.classList.add('ant');
-    img.src = '../../images/drone.png';
+    img.src = constants.ANT_SCOUT_ICON;
     img.width = imgWidth;
     img.height = imgHeight;
     ants.appendChild(img);
@@ -237,8 +237,17 @@ ipc.on('ant-moved', (evt, ant) => {
     //antEl.style.left =  
     // the shift of the grid from the screen top + placing the im in the center of the grid block + block size*position (y is reveresed)
     const antTop = gridTop + (yStep - imgHeight)/2 + yStep*(yL-ant.y);
-    //antEl.style.top = 
-    //antEl.style.transform = `rotate(${ant.angle}deg)`;
+    
+    if(ant.type == constants.ANT_SCOUT){
+        antEl.src = constants.ANT_SCOUT_ICON;
+        antEl.classList.remove('antDown');
+        antEl.classList.add('ant');
+    }
+    else{
+        antEl.src = constants.ANT_TRANSMISSION_ICON;
+        antEl.classList.add('antDown');
+        antEl.classList.remove('ant');
+    }
 
     console.log('ant top:' + antTop + '(' + ant.y + '), ant left:' + antLeft + '(' + ant.x + ')');
 
@@ -482,11 +491,9 @@ function updateToolTable(ant, newAnt){
 
             if(selectedAntId != 0){
                 document.getElementById(`ant${selectedAntId}`).classList.remove('antSelected');
-                document.getElementById(`ant${selectedAntId}`).classList.add('ant');
                 document.getElementById(`tra${selectedAntId}`).classList.remove('selectedTr');
             }
             if(selectedAntId != ant.id){
-                document.getElementById(`ant${ant.id}`).classList.remove('ant');
                 document.getElementById(`ant${ant.id}`).classList.add('antSelected');
                 document.getElementById(`tra${ant.id}`).classList.add('selectedTr');
                 selectedAntId = ant.id;

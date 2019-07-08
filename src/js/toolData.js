@@ -7,6 +7,8 @@ const fs = require('fs');
 const emiter = require('./emiter');
 var db = require('./db');
 
+const constants = require('./constants');
+
 var session;
 var id;
 var toolTable;
@@ -19,7 +21,7 @@ window.addEventListener('DOMContentLoaded', _ => {
     session = parts[0].split('=')[1];
     id = parts[1].split('=')[1];
 
-    document.getElementById('spn').innerHTML = id;
+    document.getElementById('spnId').innerHTML = id;
 
     toolTable = document.getElementById('toolTableRecords');
     gaugeLabel = document.getElementById('gaugeLabel');
@@ -64,6 +66,7 @@ var lastKey = -1;
 emiter.on('toolData-ready', (data) => {
     console.log('Data refreshed');  
     for(let i = 0; i < data.length; i++){
+        document.getElementById('spnType').innerHTML = (data[i].type == constants.ANT_SCOUT ? "Scout ant" : "Transmission ant");
         const tr = document.createElement("tr");
 
         const id = document.createElement("td");

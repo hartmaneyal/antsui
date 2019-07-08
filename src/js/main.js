@@ -229,16 +229,16 @@ function initProtoBuf(){
 
 ipc.on('simulate-ants', (evt) => {
     let payloads = [];
-    payloads.push({id: 1, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});  //1
-    payloads.push({id: 1, x: 2, y: 29, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:90});  //2
-    payloads.push({id: 1, x: 2, y: 28, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:80});  //3
-    payloads.push({id: 2, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});  //3
-    payloads.push({id: 1, x: 2, y: 27, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70});  //4
-    payloads.push({id: 2, x: 3, y: 30, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_WALL, battery:90}); //4
-    payloads.push({id: 1, x: 3, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:60}); //5
-    payloads.push({id: 2, x: 3, y: 29, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN, battery:80});  //5
-    payloads.push({id: 1, x: 4, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_EXIT, bl:constants.MAP_ENUM_WALL, battery:50}); //6
-    payloads.push({id: 2, x: 3, y: 28, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN, battery:70});  //6
+    payloads.push({id: 1, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
+    payloads.push({id: 1, x: 2, y: 29, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:90, type:constants.ANT_SCOUT});  //2
+    payloads.push({id: 1, x: 2, y: 28, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //3
+    payloads.push({id: 2, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //3
+    payloads.push({id: 1, x: 2, y: 27, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
+    payloads.push({id: 2, x: 3, y: 30, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_WALL, battery:90, type:constants.ANT_SCOUT}); //4
+    payloads.push({id: 1, x: 3, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:60, type:constants.ANT_SCOUT}); //5
+    payloads.push({id: 2, x: 3, y: 29, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //5
+    payloads.push({id: 1, x: 4, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_EXIT, bl:constants.MAP_ENUM_WALL, battery:50, type:constants.ANT_SCOUT}); //6
+    payloads.push({id: 2, x: 3, y: 28, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_TRANSMISSION});  //6
 
     /*
     payloads.push({id: 3, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});

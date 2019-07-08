@@ -49,5 +49,11 @@ module.exports = {
     // EXPORT
     EXPORT_FOLDER : './export',
     EXPORT_FILE_DATA : './export/data.json',
-    EXPORT_FILE_COMMANDS : './export/commands.json'
+    EXPORT_FILE_COMMANDS : './export/commands.json',
+    // Ant types
+    ANT_SCOUT : 'scout',
+    ANT_TRANSMISSION : 'trans',
+    // Ant icons
+    ANT_SCOUT_ICON : '../../images/drone.png',
+    ANT_TRANSMISSION_ICON : '../../images/droneDown.png'
 }

@@ -60,7 +60,8 @@ exports.insertToolRecord = (session, data) => {
         ul:data.ul, 
         rl:data.rl, 
         bl:data.bl,
-        battery: data.battery,
+        battery:data.battery,
+        type: data.type,
         tm: (new Date()).getTime()
     });
 };
