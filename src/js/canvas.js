@@ -147,6 +147,37 @@ function initAnt(antId){
     ants.appendChild(img);
 };
 
+function drawTransmitionRange(){
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute('width', '200px');
+    svg.setAttribute('height', '200px');
+
+    const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    path1.setAttribute('d', 'M 0 10 V 0 H 10');
+    path1.setAttribute('fill', 'transparent');
+    path1.setAttribute('stroke-width', '3');
+    path1.setAttribute('stroke', 'yellow');
+
+    svg.appendChild(path1);
+
+    /*
+    
+    <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" style='padding:1px;'>
+
+    <path d="M 0 10 V 0 H 10" stroke="yellow" stroke-width="3" fill="transparent"/>
+    <path d="M 15 0 H 85" stroke="yellow" stroke-width="1" stroke-dasharray="1,1"/>
+    <path d="M 90 0 H 100 V 10" stroke="yellow" stroke-width="3" fill="transparent"/>
+    <path d="M 100 15 V 85" stroke="yellow" stroke-width="1" stroke-dasharray="1,1"/>
+    <path d="M 100 90 V 100 H 90" stroke="yellow" stroke-width="3" fill="transparent"/>
+    <path d="M 85 100 H 15" stroke="yellow" stroke-width="1" stroke-dasharray="1,1"/>
+    <path d="M 10 100 H 0 V 90" stroke="yellow" stroke-width="3" fill="transparent"/>
+    <path d="M 0 85 V 15" stroke="yellow" stroke-width="1" stroke-dasharray="1,1"/>
+    
+    </svg>
+    
+    */
+};
+
 function updateGrid(ant){
     var ctx = canvas.getContext('2d');
     let leftLine = ant.x-1;
