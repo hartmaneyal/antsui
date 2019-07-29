@@ -58,6 +58,13 @@
     z-index: 90;
 }
 
+.trangeContainer{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+}
+
 #grid{
   margin-top: 5px;
 }

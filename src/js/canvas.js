@@ -147,20 +147,61 @@ function initAnt(antId){
     ants.appendChild(img);
 };
 
-function drawTransmitionRange(){
+function drawTransmitionRange(left, top, id){
+    console.log('adding transmission range');
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('width', '200px');
-    svg.setAttribute('height', '200px');
+    svg.setAttribute('id', id);
 
-    const path1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-    path1.setAttribute('d', 'M 0 10 V 0 H 10');
-    path1.setAttribute('fill', 'transparent');
-    path1.setAttribute('stroke-width', '3');
-    path1.setAttribute('stroke', 'yellow');
+    const radius = 2;
+    const xLineSize = (xStep * radius * 2) + imgWidth;
+    const yLineSize = (yStep * radius * 2) + imgHeight;
+    const xShortLine = (xLineSize/10);
+    const yShortLine = (yLineSize/10);
+    const xSpace = (xLineSize/20);
+    const ySpace = (yLineSize/20);
+    const xLongLine = (xShortLine * 8); 
+    const yLongLine = (yShortLine * 8); 
 
-    svg.appendChild(path1);
+    let topPos = 0;
+    let leftPos = 0;
 
+    topPos = topPos + yShortLine;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' V ' + (topPos - yShortLine) + ' H ' + (leftPos + xShortLine), '3', '0', 'yellow'));
+    topPos = topPos - yShortLine;
+    leftPos = leftPos + xShortLine + xSpace;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' H ' + (leftPos + xLongLine), '1', '1,1', 'yellow'));
+    leftPos = leftPos + xLongLine + xSpace;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' H ' + (leftPos + xShortLine) + ' V ' + (topPos + yShortLine), '3', '0', 'yellow'));
+    leftPos = leftPos + xShortLine;
+    topPos = topPos + yShortLine + ySpace;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' V ' + (topPos + yLongLine), '1', '1,1', 'yellow'));
+    topPos = topPos + yLongLine + ySpace;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' V ' + (topPos + yShortLine) + ' H ' + (leftPos - xShortLine), '3', '0', 'yellow'));
+    leftPos = leftPos - xShortLine - xSpace;
+    topPos = topPos + yShortLine;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' H ' + (leftPos - xLongLine), '1', '1,1', 'yellow'));
+    leftPos = leftPos - xLongLine - xSpace;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' H ' + (leftPos - xShortLine) + ' V ' + (topPos - yShortLine) , '3', '0', 'yellow'));
+    leftPos = leftPos - xShortLine;
+    topPos = topPos - yShortLine - ySpace;
+    svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' V ' + (topPos - yLongLine), '1', '1,1', 'yellow'));
+
+    svg.style.position = 'absolute';
+    svg.style.left = (left - xLineSize/2);
+    svg.style.top = (top - yLineSize/2);
+
+    const trange = document.getElementById('trange');
+    trange.appendChild(svg);
     /*
+
+    svg.appendChild(createPath('M 0 10 V 0 H 10', '3', '0', 'yellow'));
+    svg.appendChild(createPath('M 15 0 H 85', '1', '1,1', 'yellow'));
+    svg.appendChild(createPath('M 90 0 H 100 V 10', '3', '0', 'yellow'));
+    svg.appendChild(createPath('M 100 15 V 85', '1', '1,1', 'yellow'));
+    svg.appendChild(createPath('M 100 90 V 100 H 90', '3', '0', 'yellow'));
+    svg.appendChild(createPath('M 85 100 H 15', '1', '1,1', 'yellow'));
+    svg.appendChild(createPath('M 10 100 H 0 V 90', '3', '0', 'yellow'));
+    svg.appendChild(createPath('M 0 85 V 15', '1', '1,1', 'yellow'));
     
     <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" style='padding:1px;'>
 
@@ -177,6 +218,17 @@ function drawTransmitionRange(){
     
     */
 };
+
+function createPath(d, width, dash, color){
+    const path = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    path.setAttribute('d', d);
+    path.setAttribute('fill', 'transparent');
+    path.setAttribute('stroke-width', width);
+    if(dash != '0')
+        path.setAttribute('stroke-dasharray', dash);
+    path.setAttribute('stroke', color);
+    return path;
+}
 
 function updateGrid(ant){
     var ctx = canvas.getContext('2d');
@@ -266,7 +318,7 @@ ipc.on('ant-moved', (evt, ant) => {
     // the shift of the grid + placing the img in the center of the grid block + block size*position
     const antLeft = gridLeft + (xStep - imgWidth)/2 + xStep*(ant.x-1);
     //antEl.style.left =  
-    // the shift of the grid from the screen top + placing the im in the center of the grid block + block size*position (y is reveresed)
+    // the shift of the grid from the screen top + placing the img in the center of the grid block + block size*position (y is reveresed)
     const antTop = gridTop + (yStep - imgHeight)/2 + yStep*(yL-ant.y);
     
     if(ant.type == constants.ANT_SCOUT){
@@ -292,6 +344,9 @@ ipc.on('ant-moved', (evt, ant) => {
 
     updateGrid(ant);
     updateToolTable(ant, newAnt);
+
+    if(ant.type == constants.ANT_TRANSMISSION)
+        drawTransmitionRange(antLeft,antTop, ant.id);
 });
 
 function listenerStart(){
