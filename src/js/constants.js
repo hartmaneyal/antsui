@@ -55,5 +55,7 @@ module.exports = {
     ANT_TRANSMISSION : 'trans',
     // Ant icons
     ANT_SCOUT_ICON : '../../images/drone.png',
-    ANT_TRANSMISSION_ICON : '../../images/droneDown.png'
+    ANT_TRANSMISSION_ICON : '../../images/droneDown.png',
+    // Transmission range
+    ANT_TRANSMISSION_RANGE : 2
 }

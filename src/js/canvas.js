@@ -147,12 +147,21 @@ function initAnt(antId){
     ants.appendChild(img);
 };
 
-function drawTransmitionRange(left, top, id){
-    console.log('adding transmission range');
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('id', id);
+function removeTransmitionRange(id){
+    const trangeId = 'trange_' + id;
+    let svg = document.getElementById(trangeId);
+    if(svg != null){
+        const trange = document.getElementById('trange');
+        trange.removeChild(svg);
+    }
+}
 
-    const radius = 2;
+function drawTransmitionRange(left, top, id){
+    removeTransmitionRange(id);
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute('id', 'trange_' + id);
+
+    const radius = constants.ANT_TRANSMISSION_RANGE;
     const xLineSize = (xStep * radius * 2) + imgWidth;
     const yLineSize = (yStep * radius * 2) + imgHeight;
     const xShortLine = (xLineSize/10);
@@ -192,17 +201,8 @@ function drawTransmitionRange(left, top, id){
 
     const trange = document.getElementById('trange');
     trange.appendChild(svg);
-    /*
 
-    svg.appendChild(createPath('M 0 10 V 0 H 10', '3', '0', 'yellow'));
-    svg.appendChild(createPath('M 15 0 H 85', '1', '1,1', 'yellow'));
-    svg.appendChild(createPath('M 90 0 H 100 V 10', '3', '0', 'yellow'));
-    svg.appendChild(createPath('M 100 15 V 85', '1', '1,1', 'yellow'));
-    svg.appendChild(createPath('M 100 90 V 100 H 90', '3', '0', 'yellow'));
-    svg.appendChild(createPath('M 85 100 H 15', '1', '1,1', 'yellow'));
-    svg.appendChild(createPath('M 10 100 H 0 V 90', '3', '0', 'yellow'));
-    svg.appendChild(createPath('M 0 85 V 15', '1', '1,1', 'yellow'));
-    
+    /*   
     <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" style='padding:1px;'>
 
     <path d="M 0 10 V 0 H 10" stroke="yellow" stroke-width="3" fill="transparent"/>
@@ -347,6 +347,8 @@ ipc.on('ant-moved', (evt, ant) => {
 
     if(ant.type == constants.ANT_TRANSMISSION)
         drawTransmitionRange(antLeft,antTop, ant.id);
+    else
+        removeTransmitionRange(ant.id);
 });
 
 function listenerStart(){
