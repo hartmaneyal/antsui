@@ -212,6 +212,12 @@ function toolFeed(){
     setFeedMenu();
 };
 
+// algorithm server commands
+ipc.on('ui-command', (evt, x, y, action) => {
+    console.log('Sending UI command ' + action);
+    server.sendUiCommand(x, y, action);
+});
+
 // ===============
 // Simulative data
 // ===============
@@ -219,7 +225,7 @@ function toolFeed(){
 // Telemetry-Protobuff init
 let TelemetryMessage;
 function initProtoBuf(){
-  protobuf.load(`${app.getAppPath()}/src/js/telemetryMessage.proto`, function(err, root) {
+  protobuf.load(`${app.getAppPath()}/src/proto/telemetryMessage.proto`, function(err, root) {
     if (err)
         throw err;
 

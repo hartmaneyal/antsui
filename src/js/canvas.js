@@ -9,6 +9,7 @@ const fs = require('fs');
 
 const emiter = require('./emiter');
 var db = require('./db');
+const server = require('./server');
 var session;
 
 let canvas;
@@ -392,6 +393,7 @@ function markNotRelevant(){
 
     gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_IRRELEVANT_CELL);
     db.storeUiCommand(session, 'MarkNotRelevant', leftLine+1, upperLine);
+    ipc.send('ui-command', leftLine+1, upperLine+1, 'MarkNotRelevant');
 };
 
 function markPriority(){
@@ -404,6 +406,7 @@ function markPriority(){
     const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
     gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_PRIORITY_CELL);
     db.storeUiCommand(session, 'MarkPriority', leftLine+1, upperLine);
+    ipc.send('ui-command', leftLine+1, upperLine+1, 'MarkPriority');
 };
 
 function markBlocked(){
@@ -416,6 +419,7 @@ function markBlocked(){
     const upperLine = Math.floor( (rightClickPosition.y - gridTop) / yStep );
     gridBlockRecolor(leftLine*xStep, yStep*upperLine, xStep, yStep, constants.MAP_BLOCKED_CELL);
     db.storeUiCommand(session, 'MarkBlocked', leftLine+1, upperLine);
+    ipc.send('ui-command', leftLine+1, upperLine+1, 'MarkBlocked');
 };
 
 function clearMarkup(){
@@ -429,6 +433,7 @@ function clearMarkup(){
     const ctx = canvas.getContext('2d');
     gridBlockClear(leftLine*xStep, yStep*upperLine, xStep, yStep);
     db.storeUiCommand(session, 'ClearMarkup', leftLine+1, upperLine);
+    ipc.send('ui-command', leftLine+1, upperLine+1, 'MarkClear');
 };
 
 function isWithinCanvas(){

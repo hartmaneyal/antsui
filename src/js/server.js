@@ -11,11 +11,22 @@ const constants = require('./constants');
 // Telemetry-Protobuff init
 let TelemetryMessage;
 function initProtoBuf(){
-  protobuf.load(`${app.getAppPath()}/src/js/telemetryMessage.proto`, function(err, root) {
+  protobuf.load(`${app.getAppPath()}/src/proto/telemetryMessage.proto`, function(err, root) {
     if (err)
         throw err;
 
     TelemetryMessage = root.lookupType("telemetrypackage.TelemetryMessage");
+  });
+};
+
+// Ui command-Protobuff init
+let UiCommandMessage;
+function initUiProtoBuf(){
+  protobuf.load(`${app.getAppPath()}/src/proto/uiCommand.proto`, function(err, root) {
+    if (err)
+        throw err;
+
+    UiCommandMessage = root.lookupType("telemetrypackage.UiCommandMessage");
   });
 };
 
@@ -24,6 +35,7 @@ function initProtoBuf(){
 // ======================
 exports.startupServer = () => {
     initProtoBuf();
+    initUiProtoBuf();
     const client = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
     client.on('listening', function () {
@@ -52,4 +64,15 @@ exports.startupServer = () => {
     });
  
     client.bind(constants.MCAST_PORT)
+};
+
+exports.sendUiCommand = (uiX, uiY, uiAction) => { 
+    const message = UiCommandMessage.create({action: uiAction, x : uiX, y : uiY});
+    const buffer = UiCommandMessage.encode(message).finish();
+
+    const client = dgram.createSocket('udp4');
+    client.send(buffer, constants.ALGO_SERVER_PORT, constants.ALGO_SERVER_IP, (err) => {
+        if (err != null) console.log('Err: ' + err);
+        client.close();
+    });
 };

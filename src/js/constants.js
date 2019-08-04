@@ -57,5 +57,8 @@ module.exports = {
     ANT_SCOUT_ICON : '../../images/drone.png',
     ANT_TRANSMISSION_ICON : '../../images/droneDown.png',
     // Transmission range
-    ANT_TRANSMISSION_RANGE : 2
+    ANT_TRANSMISSION_RANGE : 2,
+    // Algorithm server
+    ALGO_SERVER_IP : '10.0.0.1',
+    ALGO_SERVER_PORT : 5000
 }
