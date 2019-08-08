@@ -60,5 +60,9 @@ module.exports = {
     ANT_TRANSMISSION_RANGE : 2,
     // Algorithm server
     ALGO_SERVER_IP : '10.0.0.1',
-    ALGO_SERVER_PORT : 5000
+    ALGO_SERVER_PORT : 5000,
+    // Algorithm server
+    ANT_SERVER_IP : '10.51.128.52',
+    ANT_SERVER_PORT : 3000,
+    ANT_SPEED_MS : 1000,
 }

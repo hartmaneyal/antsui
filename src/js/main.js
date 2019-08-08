@@ -90,6 +90,9 @@ function setMainMenu(){
             label: 'Simulate ants',
             click: _ => { mainWindow.webContents.send('simulation-start'); }
         }, {
+            label: 'Call real ant',
+            click: _ => { mainWindow.webContents.send('simulate-real_ant'); }
+        },{
             type: 'separator'
         }, {
             label: 'Open Dev tools',
@@ -286,5 +289,62 @@ ipc.on('simulate-ants', (evt) => {
                 if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
             }
         }, i * constants.SIMULATION_SPEED_MS);
+    }
+});
+
+const request = require('request');
+ipc.on('simulate-real_ants', (evt) => {
+    let payloads = [];
+    let commands = [];
+    payloads.push({id: 1, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
+    commands.push('f1');
+    payloads.push({id: 1, x: 2, y: 29, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:90, type:constants.ANT_SCOUT});  //2
+    commands.push('f1');
+    payloads.push({id: 1, x: 2, y: 28, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //3
+    commands.push('f1');
+    payloads.push({id: 1, x: 2, y: 27, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
+    commands.push('>,r1');
+    payloads.push({id: 1, x: 3, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:60, type:constants.ANT_SCOUT}); //5
+    commands.push('NULL');
+
+    for(let i = 0; i < payloads.length; i++){
+        setTimeout(_ => {
+            const payload = payloads[i];
+            const errMsg = TelemetryMessage.verify(payload);
+            if (errMsg){
+                console.log('Error:' + errMsg);
+                return;
+            }
+            else{
+                const message = TelemetryMessage.create(payload);
+                const buffer = TelemetryMessage.encode(message).finish();
+
+               const client = dgram.createSocket('udp4');
+               client.send(buffer, constants.MCAST_PORT, 'localhost', (err) => {
+                   if (err != null) console.log('Err: ' + err);
+                   client.close();
+               });
+
+               if(commands[i] !== 'NULL'){
+                    arr = commands[i].split(',');
+                        for(let j = 0; j < arr.length; j++){
+                        request({
+                        method: 'PUT',
+                        url: 'http://' + constants.ANT_SERVER_IP + ':' + constants.ANT_SERVER_PORT + '/api/ants/' + payload.id,
+                        body: { "antCommandsArr": [arr[j]] },
+                        json: true,
+                        headers: {
+                            'User-Agent': 'request'
+                        }
+                        }, (err, res, body) => {
+                            //console.log(res);
+                            console.log(err);
+                        });
+                    }
+               }
+
+                if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
+            }
+        }, i * constants.ANT_SPEED_MS);
     }
 });

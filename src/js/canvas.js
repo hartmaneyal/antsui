@@ -299,6 +299,19 @@ ipc.on('simulation-start', (evt) => {
     simulationStart();
 });
 
+function callRealAnt(){
+    drawEmptyGrid(cWidth, cHeight, xL, yL);
+        const ants = document.getElementById('ants');
+        ants.innerHTML = "";
+        antArray = [];
+        startTimer();
+        ipc.send('simulate-real_ants');
+};
+
+ipc.on('simulate-real_ant', (evt) => {
+    callRealAnt();
+});
+
 ipc.on('ant-moved', (evt, ant) => {
     console.log("ant-moved");
     let newAnt = false;
