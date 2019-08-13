@@ -64,5 +64,5 @@ module.exports = {
     // Algorithm server
     ANT_SERVER_IP : '10.51.128.52',
     ANT_SERVER_PORT : 3000,
-    ANT_SPEED_MS : 1000,
+    ANT_SPEED_MS : 2000,
 }
