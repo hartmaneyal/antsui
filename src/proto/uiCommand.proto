@@ -1,8 +1,8 @@
-package telemetrypackage;
 syntax = "proto3";
+package telemetrypackage;
 
 message UiCommandMessage{
-    required string action = 1; 
-    required sfixed32 x = 2;
-    required sfixed32 y = 3;
+     string action = 1; 
+     int32 x = 2;
+     int32 y = 3;
 }

@@ -300,12 +300,12 @@ ipc.on('simulation-start', (evt) => {
 });
 
 function callRealAnt(){
-    drawEmptyGrid(cWidth, cHeight, xL, yL);
-        const ants = document.getElementById('ants');
-        ants.innerHTML = "";
-        antArray = [];
-        startTimer();
-        ipc.send('simulate-real_ants');
+    //drawEmptyGrid(cWidth, cHeight, xL, yL);
+    //const ants = document.getElementById('ants');
+    //ants.innerHTML = "";
+    //antArray = [];
+    //startTimer();
+    ipc.send('simulate-real_ants');
 };
 
 ipc.on('simulate-real_ant', (evt) => {

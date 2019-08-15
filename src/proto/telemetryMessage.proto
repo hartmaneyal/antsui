@@ -1,15 +1,16 @@
-package telemetrypackage;
 syntax = "proto3";
+package telemetrypackage;
+
 
 message TelemetryMessage{
-    required sfixed32 id = 1; 
-    required sfixed32 x = 2;
-    required sfixed32 y = 3;
-    required sfixed32 angle = 4; 
-    required string ll = 5; 
-    required string ul = 6; 
-    required string rl = 7; 
-    required string bl = 8;
-    required sfixed32 battery = 9;
-    required string type = 10;
+     int32 id = 1; 
+     int32 x = 2;
+     int32 y = 3;
+     int32 angle = 4; 
+     string ll = 5; 
+     string ul = 6; 
+     string rl = 7; 
+     string bl = 8;
+     int32 battery = 9;
+     string type = 10;
 }

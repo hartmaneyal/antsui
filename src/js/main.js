@@ -296,18 +296,21 @@ const request = require('request');
 ipc.on('simulate-real_ants', (evt) => {
     let payloads = [];
     let commands = [];
-    payloads.push({id: 1, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
+    const ant = 1;
+    payloads.push({id: ant, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
     commands.push('f1');
-    payloads.push({id: 1, x: 2, y: 29, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:90, type:constants.ANT_SCOUT});  //2
+    payloads.push({id: ant, x: 2, y: 29, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:90, type:constants.ANT_SCOUT});  //2
     commands.push('f1');
-    payloads.push({id: 1, x: 2, y: 28, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //3
+    payloads.push({id: ant, x: 2, y: 28, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //3
     commands.push('f1');
-    payloads.push({id: 1, x: 2, y: 27, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
+    payloads.push({id: ant, x: 2, y: 27, angle: 90, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
     commands.push('r1');
-    payloads.push({id: 1, x: 3, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:60, type:constants.ANT_SCOUT}); //5
+    payloads.push({id: ant, x: 2, y: 27, angle: 90, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
+    commands.push('f1');
+    payloads.push({id: ant, x: 3, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:60, type:constants.ANT_SCOUT}); //5
     commands.push('NULL');
-    payloads.push({id: 2, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
-    commands.push('f2');
+    //payloads.push({id: 2, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
+    //commands.push('f2');
 
     for(let i = 0; i < payloads.length; i++){
         setTimeout(_ => {
@@ -321,11 +324,11 @@ ipc.on('simulate-real_ants', (evt) => {
                 const message = TelemetryMessage.create(payload);
                 const buffer = TelemetryMessage.encode(message).finish();
 
-               const client = dgram.createSocket('udp4');
-               client.send(buffer, constants.MCAST_PORT, 'localhost', (err) => {
-                   if (err != null) console.log('Err: ' + err);
-                   client.close();
-               });
+               //const client = dgram.createSocket('udp4');
+               //client.send(buffer, constants.MCAST_PORT, 'localhost', (err) => {
+               //    if (err != null) console.log('Err: ' + err);
+               //    client.close();
+               //});
 
                if(commands[i] !== 'NULL'){
                     arr = commands[i].split(',');
@@ -345,7 +348,7 @@ ipc.on('simulate-real_ants', (evt) => {
                     }
                }
 
-                if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
+                //if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
             }
         }, i * constants.ANT_SPEED_MS);
     }

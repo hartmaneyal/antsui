@@ -45,7 +45,7 @@ module.exports = {
     MCAST_HOST : '127.0.0.1',
     MCAST_PORT : 41848,
     MCAST_TTL : 128,
-    MCAST_AUTO_START : false,
+    MCAST_AUTO_START : true,
     // EXPORT
     EXPORT_FOLDER : './export',
     EXPORT_FILE_DATA : './export/data.json',
@@ -62,7 +62,7 @@ module.exports = {
     ALGO_SERVER_IP : '10.0.0.1',
     ALGO_SERVER_PORT : 5000,
     // Algorithm server
-    ANT_SERVER_IP : '10.51.128.52',
+    ANT_SERVER_IP : 'localhost',
     ANT_SERVER_PORT : 3000,
-    ANT_SPEED_MS : 2000,
+    ANT_SPEED_MS : 100,
 }
