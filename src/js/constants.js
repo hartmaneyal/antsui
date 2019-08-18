@@ -65,4 +65,7 @@ module.exports = {
     ANT_SERVER_IP : 'localhost',
     ANT_SERVER_PORT : 3000,
     ANT_SPEED_MS : 100,
+    // simulation server
+    SIM_SERVER_IP : 'localhost',
+    SIM_SERVER_PORT : 1337
 }
