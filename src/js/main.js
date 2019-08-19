@@ -292,7 +292,7 @@ ipc.on('simulate-ants', (evt) => {
     }
 });
 
-const request = require('request');
+//const request = require('request');
 ipc.on('simulate-real_ants', (evt) => {
     const client = dgram.createSocket('udp4');
     client.send('UI:START', constants.SIM_SERVER_PORT, constants.SIM_SERVER_IP, (err) => {

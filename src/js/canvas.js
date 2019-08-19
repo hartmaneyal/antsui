@@ -300,7 +300,7 @@ ipc.on('simulation-start', (evt) => {
 });
 
 function callRealAnt(){
-    //drawEmptyGrid(cWidth, cHeight, xL, yL);
+    drawEmptyGrid(cWidth, cHeight, xL, yL);
     //const ants = document.getElementById('ants');
     //ants.innerHTML = "";
     //antArray = [];
