@@ -20,10 +20,10 @@ module.exports = {
     SERVER_PORT : 1337,
     VIDEO_PORT: 1338,
     // Map grid
-    MAP_WIDTH : 550, // was 740    gridContainer min-height: 380px; tblDivMain max-height 300px;
-    MAP_HEIGHT : 550, // was 370
-    MAP_X_LINES : 30, // was 50
-    MAP_Y_LINES : 30,
+    MAP_WIDTH : 550,
+    MAP_HEIGHT : 550,
+    MAP_X_LINES : 10, // was 30
+    MAP_Y_LINES : 10, // was 30
     MAP_GRID_LINE_COLOR : '#5bcb6b',
     MAP_SPECIAL_LINE_COLOR : 'green',
     MAP_WALL_LINE_COLOR : 'purple',
@@ -37,7 +37,8 @@ module.exports = {
     MAP_ENUM_EXIT : 'exit',
     MAP_ENUM_OPEN : 'open',
     MAP_ANIME_DURATION : 500,
-    MAP_INVERT_Y : true,
+    MAP_INVERT_Y : false,
+    MAP_ZERO_BASED : true,
     // feed definitions
     FEED_COLUMNS : 2, // must be an integer, divideable by 12
     //MCAST parameters
@@ -57,7 +58,7 @@ module.exports = {
     ANT_SCOUT_ICON : '../../images/drone.png',
     ANT_TRANSMISSION_ICON : '../../images/droneDown.png',
     // Transmission range
-    ANT_TRANSMISSION_RANGE : 2,
+    ANT_TRANSMISSION_RANGE : 1,
     // Algorithm server
     ALGO_SERVER_IP : '10.0.0.1',
     ALGO_SERVER_PORT : 5000,

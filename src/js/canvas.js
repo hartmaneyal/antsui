@@ -125,16 +125,29 @@ function drawFullGrid(canvasWidth, canvasHeight, xLines, yLines){
     var ctx = initGrid(canvasWidth, canvasHeight);
 
     drawGridLines(ctx, canvasWidth, canvasHeight, xStep, yStep);
+
+    drawEntrance(ctx, 0, xStep, canvasHeight, canvasHeight);
     drawEntrance(ctx, xStep, xStep*2, canvasHeight, canvasHeight);
-    drawWall(ctx, 0, xStep, canvasHeight, canvasHeight);
-    drawWall(ctx, 0, 0, canvasHeight, canvasHeight-yStep);
-    drawWall(ctx, 0, xStep, canvasHeight-yStep, canvasHeight-yStep);
-    drawWall(ctx, xStep, xStep, canvasHeight-yStep, canvasHeight-yStep*4);
-    drawWall(ctx, xStep*2, xStep*3, canvasHeight, canvasHeight);
-    drawWall(ctx, xStep*3, xStep*3, canvasHeight, canvasHeight-yStep*3);
-    drawWall(ctx, xStep*3, xStep*4, canvasHeight-yStep*3, canvasHeight-yStep*3);
-    drawWall(ctx, xStep, xStep*4, canvasHeight-yStep*4, canvasHeight-yStep*4);
-    drawExit(ctx, xStep*4, xStep*4, canvasHeight-yStep*3, canvasHeight-yStep*4);
+
+    drawWall(ctx, 0, 0, canvasHeight, canvasHeight-5*yStep);
+    drawWall(ctx, 0, 6*xStep, canvasHeight-5*yStep, canvasHeight-5*yStep);
+    drawWall(ctx, 6*xStep, 6*xStep, canvasHeight-5*yStep, canvasHeight-7*yStep);
+    drawWall(ctx, 0, 6*xStep, canvasHeight-7*yStep, canvasHeight-7*yStep);
+    drawWall(ctx, 0, 0, canvasHeight-7*yStep, canvasHeight-8*yStep);
+    drawExit(ctx, 0, 0, canvasHeight-8*yStep, canvasHeight-9*yStep);
+    drawWall(ctx, 0, 0, canvasHeight-9*yStep, 0);
+    drawWall(ctx, 0, 8*xStep, 0, 0);
+    drawWall(ctx, 8*xStep, 8*xStep, 0, canvasHeight-5*yStep);
+    drawWall(ctx, 8*xStep, 10*xStep, canvasHeight-5*yStep, canvasHeight-5*yStep);
+    drawWall(ctx, 10*xStep, 10*xStep, canvasHeight-5*yStep, canvasHeight);
+    drawWall(ctx, 6*xStep, 10*xStep, canvasHeight, canvasHeight);
+    drawWall(ctx, 6*xStep, 6*xStep, canvasHeight-3*yStep, canvasHeight);
+    drawWall(ctx, 6*xStep, 2*xStep, canvasHeight-3*yStep, canvasHeight-3*yStep);
+    drawWall(ctx, 2*xStep, 2*xStep, canvasHeight-3*yStep, canvasHeight);
+
+    drawExit(ctx, 9*xStep, 10*xStep, canvasHeight-2*yStep, canvasHeight-2*yStep);
+    drawExit(ctx, 9*xStep, 9*xStep, canvasHeight-2*yStep, canvasHeight-yStep);
+    drawExit(ctx, 9*xStep, 10*xStep, canvasHeight-1*yStep, canvasHeight-yStep);
 };
 
 function initAnt(antId){
@@ -172,8 +185,8 @@ function drawTransmitionRange(left, top, id){
     const xLongLine = (xShortLine * 8); 
     const yLongLine = (yShortLine * 8); 
 
-    let topPos = 0;
-    let leftPos = 0;
+    let topPos = 10;
+    let leftPos = 10;
 
     topPos = topPos + yShortLine;
     svg.appendChild(createPath('M ' + leftPos + ' ' + topPos + ' V ' + (topPos - yShortLine) + ' H ' + (leftPos + xShortLine), '3', '0', 'yellow'));
@@ -314,6 +327,10 @@ ipc.on('simulate-real_ant', (evt) => {
 
 ipc.on('ant-moved', (evt, ant) => {
     console.log("ant-moved");
+    console.log('Canvas::ant id: ' + ant.id + 
+                            ',x='+ant.x + ',y=' + ant.y + 
+                            ',angle=' + ant.angle + ',ll='+ant.ll + 
+                            ',ul=' + ant.ul + ',bl=' + ant.bl + ',rl='+ant.rl);
     let newAnt = false;
     if(!antArray.includes(ant.id)){
         initAnt(ant.id);
@@ -322,9 +339,14 @@ ipc.on('ant-moved', (evt, ant) => {
         newAnt = true;
     }
 
+    if(constants.MAP_ZERO_BASED){
+        ant.x = ant.x + 1;
+        ant.y = ant.y + 1;
+    }
     if(constants.MAP_INVERT_Y){
-        console.log('Inverting Y');
-        ant.y = constants.MAP_Y_LINES - ant.y + 1;
+        let newY = constants.MAP_Y_LINES - ant.y;
+        console.log('Inverting Y (from: ' + ant.y + ' to: ' + newY + ')');
+        ant.y = newY;
     }
     db.insertToolRecord(session, ant);
 
@@ -623,7 +645,6 @@ function startTimer(){
     timer.reset(0);
     timer.start();
     timer.onTime(function(time) {
-        console.log(time.ms);
         document.getElementById('timeElapssed').innerHTML = time.ms / 1000;
     });
 };

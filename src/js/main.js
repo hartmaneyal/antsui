@@ -39,6 +39,9 @@ app.on('ready', _ => {
 
     emiter.on('ant-move-data', (message) => {
       console.log('Passing to UI');
+      message.y += 0;
+      message.x += 0;
+      message.angle += 0;
       mainWindow.webContents.send('ant-moved', message);
     });
 
@@ -237,37 +240,45 @@ function initProtoBuf(){
 };
 
 ipc.on('simulate-ants', (evt) => {
+    let attackAnt = 1;
     let payloads = [];
-    payloads.push({id: 1, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
-    payloads.push({id: 1, x: 2, y: 29, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:90, type:constants.ANT_SCOUT});  //2
-    payloads.push({id: 1, x: 2, y: 28, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //3
-    payloads.push({id: 2, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //3
-    payloads.push({id: 1, x: 2, y: 27, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
-    payloads.push({id: 2, x: 3, y: 30, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_WALL, battery:90, type:constants.ANT_SCOUT}); //4
-    payloads.push({id: 1, x: 3, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:60, type:constants.ANT_SCOUT}); //5
-    payloads.push({id: 2, x: 3, y: 29, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //5
-    payloads.push({id: 1, x: 4, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_EXIT, bl:constants.MAP_ENUM_WALL, battery:50, type:constants.ANT_SCOUT}); //6
-    payloads.push({id: 2, x: 3, y: 28, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_WALL, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_TRANSMISSION});  //6
+    
+    payloads.push({id: attackAnt, x: 0, y: 0, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
+    payloads.push({id: attackAnt, x: 0, y: 1, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //2
+    payloads.push({id: attackAnt, x: 0, y: 2, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //3
+    payloads.push({id: attackAnt, x: 0, y: 3, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //4
 
+    payloads.push({id: attackAnt, x: 1, y: 3, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //5
+    payloads.push({id: attackAnt, x: 2, y: 3, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //6
+    payloads.push({id: attackAnt, x: 3, y: 3, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //7
+    payloads.push({id: attackAnt, x: 4, y: 3, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //8
+    payloads.push({id: attackAnt, x: 5, y: 3, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //9
+    payloads.push({id: attackAnt, x: 6, y: 3, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //10
+    payloads.push({id: attackAnt, x: 7, y: 3, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //11
+    
+    payloads.push({id: attackAnt, x: 7, y: 2, angle: 180, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //12
+    payloads.push({id: attackAnt, x: 7, y: 1, angle: 180, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //13
+
+    payloads.push({id: attackAnt, x: 8, y: 1, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_EXIT, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //14
     /*
-    payloads.push({id: 3, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 4, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 5, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 6, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 7, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 8, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 9, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 10, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 11, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 12, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 13, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 14, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 15, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 16, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 17, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
-    payloads.push({id: 18, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100});
+    payloads.push({id: attackAnt, x: 0, y: 10, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
+    payloads.push({id: attackAnt, x: 0, y: 9, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //2
+    payloads.push({id: attackAnt, x: 0, y: 8, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //3
+    payloads.push({id: attackAnt, x: 0, y: 7, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //4
+
+    payloads.push({id: attackAnt, x: 1, y: 7, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //5
+    payloads.push({id: attackAnt, x: 2, y: 7, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //6
+    payloads.push({id: attackAnt, x: 3, y: 7, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //7
+    payloads.push({id: attackAnt, x: 4, y: 7, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //8
+    payloads.push({id: attackAnt, x: 5, y: 7, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_WALL, battery:100, type:constants.ANT_SCOUT});  //9
+    payloads.push({id: attackAnt, x: 6, y: 7, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //10
+    payloads.push({id: attackAnt, x: 7, y: 7, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //11
+    
+    payloads.push({id: attackAnt, x: 7, y: 8, angle: 180, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //12
+    payloads.push({id: attackAnt, x: 7, y: 9, angle: 180, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //13
+
+    payloads.push({id: attackAnt, x: 8, y: 9, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_EXIT, bl:constants.MAP_ENUM_OPEN, battery:100, type:constants.ANT_SCOUT});  //14
     */
-   
     for(let i = 0; i < payloads.length; i++){
         setTimeout(_ => {
             const payload = payloads[i];
@@ -292,72 +303,10 @@ ipc.on('simulate-ants', (evt) => {
     }
 });
 
-//const request = require('request');
 ipc.on('simulate-real_ants', (evt) => {
     const client = dgram.createSocket('udp4');
     client.send('UI:START', constants.SIM_SERVER_PORT, constants.SIM_SERVER_IP, (err) => {
         if (err != null) console.log('Err: ' + err);
             client.close();
     });
-});
-
-ipc.on('simulate-real_ants_old', (evt) => {
-    let payloads = [];
-    let commands = [];
-    const ant = 1;
-    payloads.push({id: ant, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
-    commands.push('f1');
-    payloads.push({id: ant, x: 2, y: 29, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:90, type:constants.ANT_SCOUT});  //2
-    commands.push('f1');
-    payloads.push({id: ant, x: 2, y: 28, angle: 0, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:80, type:constants.ANT_SCOUT});  //3
-    commands.push('f1');
-    payloads.push({id: ant, x: 2, y: 27, angle: 90, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
-    commands.push('r1');
-    payloads.push({id: ant, x: 2, y: 27, angle: 90, ll:constants.MAP_ENUM_WALL, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:70, type:constants.ANT_SCOUT});  //4
-    commands.push('f1');
-    payloads.push({id: ant, x: 3, y: 27, angle: 90, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_WALL, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_OPEN, battery:60, type:constants.ANT_SCOUT}); //5
-    commands.push('NULL');
-    //payloads.push({id: 2, x: 2, y: 30, angle: 0, ll:constants.MAP_ENUM_OPEN, ul:constants.MAP_ENUM_OPEN, rl:constants.MAP_ENUM_OPEN, bl:constants.MAP_ENUM_ENTRY, battery:100, type:constants.ANT_SCOUT});  //1
-    //commands.push('f2');
-
-    for(let i = 0; i < payloads.length; i++){
-        setTimeout(_ => {
-            const payload = payloads[i];
-            const errMsg = TelemetryMessage.verify(payload);
-            if (errMsg){
-                console.log('Error:' + errMsg);
-                return;
-            }
-            else{
-                const message = TelemetryMessage.create(payload);
-                const buffer = TelemetryMessage.encode(message).finish();
-
-               //const client = dgram.createSocket('udp4');
-               //client.send(buffer, constants.MCAST_PORT, 'localhost', (err) => {
-               //    if (err != null) console.log('Err: ' + err);
-               //    client.close();
-               //});
-
-               if(commands[i] !== 'NULL'){
-                    arr = commands[i].split(',');
-                        for(let j = 0; j < arr.length; j++){
-                        request({
-                        method: 'PUT',
-                        url: 'http://' + constants.ANT_SERVER_IP + ':' + constants.ANT_SERVER_PORT + '/api/ants/' + payload.id,
-                        body: { "antCommandsArr": [arr[j]] },
-                        json: true,
-                        headers: {
-                            'User-Agent': 'request'
-                        }
-                        }, (err, res, body) => {
-                            //console.log(res);
-                            console.log(err);
-                        });
-                    }
-               }
-
-                //if(i == payloads.length - 1) mainWindow.webContents.send('session-stop');
-            }
-        }, i * constants.ANT_SPEED_MS);
-    }
 });
